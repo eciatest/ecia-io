@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>ECIA — Generate Viral Hooks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Generate viral hooks for TikTok, Reels & Shorts in seconds." />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #1a1a2e, #000);
+      color: #fff;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 80px 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 80px;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 1px;
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 20px;
+      opacity: 0.85;
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 26px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #7c7cff, #9f6bff);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-secondary {
+      border: 1px solid #444;
+      color: #fff;
+    }
+
+    .section {
+      margin-top: 120px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+    }
+
+    .price {
+      font-size: 36px;
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      opacity: 0.6;
+      margin-top: 120px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">ECIA</div>
+      <div>EN</div>
+    </header>
+
+    <section class="hero">
+      <h1>Stop losing viewers<br/>in the first 3 seconds</h1>
+      <p>
+        ECIA generates viral hooks for TikTok, Reels and Shorts.
+        Just paste your topic or script — get 10 hooks instantly.
+      </p>
+
+      <div class="buttons">
+        <a href="#pricing" class="btn btn-primary">Start now</a>
+        <a href="#how" class="btn btn-secondary">How it works</a>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <h2>How it works</h2>
+      <div class="grid">
+        <div class="card">1. Paste your topic or script</div>
+        <div class="card">2. AI generates 10 hooks instantly</div>
+        <div class="card">3. Pick the best hook and post</div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section">
+      <h2>Pricing</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Free</h3>
+          <p class="price">0€</p>
+          <p>5 hooks / month</p>
+        </div>
+
+        <div class="card">
+          <h3>Pro</h3>
+          <p class="price">19€</p>
+          <p>100 hooks / month</p>
+          <a href="#" class="btn btn-primary">Subscribe</a>
+        </div>
+
+        <div class="card">
+          <h3>Ultra</h3>
+          <p class="price">39€</p>
+          <p>Unlimited hooks</p>
+          <a href="#" class="btn btn-primary">Subscribe</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © ECIA — All rights reserved
+    </footer>
+  </div>
+</body>
+</html>
