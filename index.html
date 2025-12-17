@@ -2,167 +2,266 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>ECIA — Generate Viral Hooks</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Generate viral hooks for TikTok, Reels & Shorts in seconds." />
+  <title>ECIA — Capture attention in 3 seconds</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Generate viral hooks for TikTok, Reels & Shorts using AI." />
 
   <style>
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #1a1a2e, #000);
-      color: #fff;
+    :root {
+      --bg: #0b0d12;
+      --card: #121521;
+      --text: #ffffff;
+      --muted: #9ca3af;
+      --primary: #6366f1;
+      --secondary: #22d3ee;
+      --border: rgba(255,255,255,0.08);
     }
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 80px 20px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1a1f3a, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 80px;
+      padding: 24px 48px;
     }
 
     .logo {
       font-weight: 700;
-      font-size: 22px;
-      letter-spacing: 1px;
-    }
-
-    .hero h1 {
-      font-size: 56px;
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-
-    .hero p {
       font-size: 20px;
-      opacity: 0.85;
-      max-width: 700px;
-      margin-bottom: 40px;
+      letter-spacing: 0.5px;
     }
 
-    .buttons {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
+    .lang-toggle button {
+      background: transparent;
+      color: var(--muted);
+      border: none;
+      margin-left: 12px;
+      cursor: pointer;
+      font-size: 14px;
     }
 
-    .btn {
-      padding: 16px 26px;
-      border-radius: 10px;
-      font-size: 16px;
+    .lang-toggle button.active {
+      color: var(--text);
       font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
     }
 
-    .btn-primary {
-      background: linear-gradient(90deg, #7c7cff, #9f6bff);
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 52px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    p.subtitle {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto 40px;
+    }
+
+    .cta {
+      display: inline-block;
+      padding: 16px 36px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: #000;
+      font-weight: 700;
+      text-decoration: none;
+      margin-bottom: 80px;
     }
 
-    .btn-primary:hover {
-      transform: scale(1.05);
-    }
-
-    .btn-secondary {
-      border: 1px solid #444;
-      color: #fff;
-    }
-
-    .section {
-      margin-top: 120px;
-    }
-
-    .grid {
+    .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+      gap: 24px;
+      margin-bottom: 100px;
     }
 
     .card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, var(--card), rgba(18,21,33,0.6));
+      border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 30px;
+      padding: 28px;
+      text-align: left;
+    }
+
+    .card h3 {
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap: 32px;
     }
 
     .price {
-      font-size: 36px;
+      font-size: 40px;
       font-weight: 700;
+      margin: 16px 0;
     }
 
     footer {
+      padding: 40px;
       text-align: center;
-      opacity: 0.6;
-      margin-top: 120px;
-      font-size: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 36px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <header>
-      <div class="logo">ECIA</div>
-      <div>EN</div>
-    </header>
 
-    <section class="hero">
-      <h1>Stop losing viewers<br/>in the first 3 seconds</h1>
-      <p>
-        ECIA generates viral hooks for TikTok, Reels and Shorts.
-        Just paste your topic or script — get 10 hooks instantly.
-      </p>
-
-      <div class="buttons">
-        <a href="#pricing" class="btn btn-primary">Start now</a>
-        <a href="#how" class="btn btn-secondary">How it works</a>
-      </div>
-    </section>
-
-    <section id="how" class="section">
-      <h2>How it works</h2>
-      <div class="grid">
-        <div class="card">1. Paste your topic or script</div>
-        <div class="card">2. AI generates 10 hooks instantly</div>
-        <div class="card">3. Pick the best hook and post</div>
-      </div>
-    </section>
-
-    <section id="pricing" class="section">
-      <h2>Pricing</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Free</h3>
-          <p class="price">0€</p>
-          <p>5 hooks / month</p>
-        </div>
-
-        <div class="card">
-          <h3>Pro</h3>
-          <p class="price">19€</p>
-          <p>100 hooks / month</p>
-          <a href="#" class="btn btn-primary">Subscribe</a>
-        </div>
-
-        <div class="card">
-          <h3>Ultra</h3>
-          <p class="price">39€</p>
-          <p>Unlimited hooks</p>
-          <a href="#" class="btn btn-primary">Subscribe</a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      © ECIA — All rights reserved
-    </footer>
+<header>
+  <div class="logo">ECIA</div>
+  <div class="lang-toggle">
+    <button onclick="setLang('fr')" id="btn-fr" class="active">FR</button>
+    <button onclick="setLang('en')" id="btn-en">EN</button>
   </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <h1 id="title">Captez l’attention en 3 secondes</h1>
+  <p class="subtitle" id="subtitle">
+    ECIA utilise l’IA pour générer des hooks viraux optimisés pour TikTok, Reels et Shorts.
+  </p>
+  <a href="#pricing" class="cta" id="cta">Commencer maintenant</a>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="card">
+      <h3 id="f1t">Hooks instantanés</h3>
+      <p id="f1d">Collez un sujet ou un script, recevez 10 hooks prêts à performer.</p>
+    </div>
+    <div class="card">
+      <h3 id="f2t">Scores intelligents</h3>
+      <p id="f2d">Chaque hook est noté selon curiosité, clarté et émotion.</p>
+    </div>
+    <div class="card">
+      <h3 id="f3t">Pensé pour la rétention</h3>
+      <p id="f3d">Optimisé pour retenir l’audience dès les 3 premières secondes.</p>
+    </div>
+    <div class="card">
+      <h3 id="f4t">100 % automatisé</h3>
+      <p id="f4d">Aucun appel, aucun montage, aucun effort.</p>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <h2 id="pricing-title">Tarifs</h2>
+
+  <div class="pricing" id="pricing">
+    <div class="card">
+      <h3 id="p1t">Gratuit</h3>
+      <div class="price">0€</div>
+      <p id="p1d">5 hooks par mois</p>
+    </div>
+
+    <div class="card">
+      <h3 id="p2t">Pro</h3>
+      <div class="price">19€</div>
+      <p id="p2d">100 hooks / mois</p>
+    </div>
+
+    <div class="card">
+      <h3 id="p3t">Ultra</h3>
+      <div class="price">39€</div>
+      <p id="p3d">Hooks illimités</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © ECIA — Built for creators
+</footer>
+
+<script>
+  const content = {
+    fr: {
+      title: "Captez l’attention en 3 secondes",
+      subtitle: "ECIA utilise l’IA pour générer des hooks viraux optimisés pour TikTok, Reels et Shorts.",
+      cta: "Commencer maintenant",
+      f1t: "Hooks instantanés",
+      f1d: "Collez un sujet ou un script, recevez 10 hooks prêts à performer.",
+      f2t: "Scores intelligents",
+      f2d: "Chaque hook est noté selon curiosité, clarté et émotion.",
+      f3t: "Pensé pour la rétention",
+      f3d: "Optimisé pour retenir l’audience dès les 3 premières secondes.",
+      f4t: "100 % automatisé",
+      f4d: "Aucun appel, aucun montage, aucun effort.",
+      pricing: "Tarifs",
+      p1t: "Gratuit",
+      p1d: "5 hooks par mois",
+      p2t: "Pro",
+      p2d: "100 hooks / mois",
+      p3t: "Ultra",
+      p3d: "Hooks illimités"
+    },
+    en: {
+      title: "Capture attention in 3 seconds",
+      subtitle: "ECIA uses AI to generate viral hooks for TikTok, Reels & Shorts.",
+      cta: "Get started",
+      f1t: "Instant hooks",
+      f1d: "Paste a topic or script, get 10 high-impact hooks.",
+      f2t: "Smart scoring",
+      f2d: "Each hook is scored on curiosity, clarity and emotion.",
+      f3t: "Built for retention",
+      f3d: "Optimized to retain viewers in the first 3 seconds.",
+      f4t: "Fully automated",
+      f4d: "No calls. No editing. No effort.",
+      pricing: "Pricing",
+      p1t: "Free",
+      p1d: "5 hooks per month",
+      p2t: "Pro",
+      p2d: "100 hooks / month",
+      p3t: "Ultra",
+      p3d: "Unlimited hooks"
+    }
+  };
+
+  function setLang(lang) {
+    document.documentElement.lang = lang;
+    for (const key in content[lang]) {
+      const el = document.getElementById(key) || document.getElementById(key.replace("pricing","pricing-title"));
+      if (el) el.innerText = content[lang][key];
+    }
+    document.getElementById("btn-fr").classList.toggle("active", lang === "fr");
+    document.getElementById("btn-en").classList.toggle("active", lang === "en");
+  }
+</script>
+
 </body>
 </html>
+
