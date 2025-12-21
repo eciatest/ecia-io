@@ -1,354 +1,1451 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ECIA — Générateur de scripts IA pour TikTok, Reels & Shorts</title>
-  <meta name="description" content="ECIA génère des scripts viraux complets pour TikTok, Reels et Shorts en 30 secondes. Arrête de deviner. Commence à convertir." />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ECIA - Générateur de scripts IA pour TikTok, Reels et Shorts. Créez des vidéos virales en 30 secondes.">
+    <title>ECIA - AI Script Generator for Viral Videos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    :root {
-      --bg: #0b0b12;
-      --bg-soft: #12121c;
-      --card: rgba(255,255,255,0.04);
-      --border: rgba(255,255,255,0.08);
-      --primary: #4f7cff;
-      --primary-soft: rgba(79,124,255,0.15);
-      --text: #ffffff;
-      --text-soft: rgba(255,255,255,0.7);
-      --radius: 14px;
-    }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #141420;
+            --bg-card: #1a1a2e;
+            --accent-blue: #2563eb;
+            --accent-blue-light: #3b82f6;
+            --accent-blue-dark: #1e40af;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --border-color: rgba(37, 99, 235, 0.2);
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
-      background: radial-gradient(1200px 600px at 50% -10%, rgba(79,124,255,0.15), transparent), var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
+        /* Utility Classes */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
 
-    a { color: inherit; text-decoration: none; }
+        .section {
+            padding: 100px 0;
+        }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+        .hidden {
+            display: none !important;
+        }
 
-    /* HEADER */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(10px);
-      background: rgba(11,11,18,0.85);
-      border-bottom: 1px solid var(--border);
-    }
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+        }
 
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 64px;
-    }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .logo {
-      font-weight: 800;
-      font-size: 20px;
-      background: linear-gradient(135deg, #ffffff, var(--primary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .lang {
-      display: flex;
-      gap: 6px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 4px;
-      border-radius: 8px;
-    }
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
 
-    .lang button {
-      border: none;
-      background: transparent;
-      color: var(--text-soft);
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
 
-    .lang button.active {
-      background: var(--primary);
-      color: #fff;
-    }
+        nav a:hover {
+            color: var(--accent-blue-light);
+        }
 
-    /* HERO */
-    .hero {
-      padding: 80px 0 60px;
-      text-align: center;
-    }
+        .lang-toggle {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
 
-    .hero h1 {
-      font-size: clamp(32px, 6vw, 52px);
-      line-height: 1.1;
-      margin-bottom: 16px;
-    }
+        .lang-btn {
+            padding: 6px 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
 
-    .hero p {
-      color: var(--text-soft);
-      font-size: clamp(16px, 3.5vw, 20px);
-      max-width: 720px;
-      margin: 0 auto 32px;
-    }
+        .lang-btn.active {
+            background: var(--accent-blue);
+            color: white;
+        }
 
-    .cta {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--primary), #6aa2ff);
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-weight: 700;
-      box-shadow: 0 12px 40px rgba(79,124,255,0.35);
-    }
+        .lang-btn:hover:not(.active) {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--text-primary);
+        }
 
-    .cta-sub {
-      display: block;
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--text-soft);
-    }
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
 
-    /* MOCK */
-    .mock {
-      margin-top: 50px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px;
-      text-align: left;
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
-      backdrop-filter: blur(12px);
-    }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+        }
 
-    .mock small {
-      color: var(--text-soft);
-      font-size: 13px;
-    }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--accent-blue);
+            padding: 12px 30px;
+        }
 
-    .mock pre {
-      margin-top: 14px;
-      background: #0f0f18;
-      border-radius: 10px;
-      padding: 16px;
-      overflow-x: auto;
-      font-size: 14px;
-      border: 1px solid var(--border);
-    }
+        .btn-secondary:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
 
-    .scores {
-      display: flex;
-      gap: 14px;
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--text-soft);
-    }
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 140px 0 100px;
+            background: radial-gradient(ellipse at top, rgba(37, 99, 235, 0.15) 0%, transparent 60%);
+        }
 
-    section { padding: 70px 0; }
+        .hero h1 {
+            font-size: 64px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-blue-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    h2 {
-      font-size: clamp(26px, 5vw, 40px);
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        .hero p {
+            font-size: 22px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
 
-    .subtitle {
-      text-align: center;
-      color: var(--text-soft);
-      max-width: 640px;
-      margin: 0 auto 50px;
-    }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
-      gap: 20px;
-    }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin-top: 80px;
+            flex-wrap: wrap;
+        }
 
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 26px;
-    }
+        .stat {
+            text-align: center;
+        }
 
-    .card h3 { margin-bottom: 8px; }
+        .stat-number {
+            display: block;
+            font-size: 52px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .card p {
-      color: var(--text-soft);
-      font-size: 15px;
-    }
+        .stat-label {
+            display: block;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
 
-    /* PRICING */
-    .pricing {
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-      gap: 24px;
-    }
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
 
-    .price-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 30px;
-      text-align: center;
-    }
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        }
 
-    .price {
-      font-size: 42px;
-      font-weight: 800;
-      margin: 14px 0;
-    }
+        /* Card */
+        .card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
 
-    ul {
-      list-style: none;
-      margin-top: 20px;
-      text-align: left;
-    }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.2);
+        }
 
-    ul li {
-      margin-bottom: 10px;
-      font-size: 15px;
-      color: var(--text-soft);
-    }
+        .card h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--accent-blue-light);
+        }
 
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 0;
-      text-align: center;
-      color: var(--text-soft);
-      font-size: 14px;
-    }
-  </style>
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-blue-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 60px;
+            border: 1px solid var(--border-color);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 20px;
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .demo-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            max-width: 1000px;
+            margin: 60px auto 0;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            padding: 48px 36px;
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 20px 60px rgba(37, 99, 235, 0.3);
+        }
+
+        .pricing-card.popular {
+            border-color: var(--accent-blue);
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.3);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pricing-card h3 {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .pricing-card .price {
+            font-size: 56px;
+            font-weight: 700;
+            color: var(--accent-blue-light);
+            margin: 24px 0;
+        }
+
+        .pricing-card .price small {
+            font-size: 20px;
+            color: var(--text-muted);
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin: 32px 0;
+            text-align: left;
+        }
+
+        .pricing-card li {
+            padding: 12px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pricing-card li::before {
+            content: "✓";
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: var(--bg-card);
+            padding: 32px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .faq-item h4 {
+            color: var(--accent-blue-light);
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .faq-item p {
+            color: var(--text-secondary);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--accent-blue-dark) 0%, var(--accent-blue) 100%);
+            padding: 80px 60px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 60px auto;
+            max-width: 1200px;
+        }
+
+        .cta-section h2 {
+            font-size: 48px;
+            margin-bottom: 24px;
+        }
+
+        .cta-section p {
+            font-size: 20px;
+            opacity: 0.95;
+            margin-bottom: 40px;
+        }
+
+        .cta-section .btn {
+            background: white;
+            color: var(--accent-blue);
+            font-size: 18px;
+            padding: 16px 40px;
+        }
+
+        .cta-section .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .cta-features {
+            margin-top: 24px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 60px 24px 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 20px;
+            color: var(--accent-blue-light);
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 12px 0;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-blue-light);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        /* Tablet Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .hero h1 {
+                font-size: 52px;
+            }
+
+            .hero p {
+                font-size: 20px;
+            }
+
+            .section {
+                padding: 80px 0;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 24px;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            /* Header Mobile */
+            header {
+                padding: 16px 0;
+            }
+
+            .header-content {
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .mobile-nav.active {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 68px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--border-color);
+                padding: 24px;
+                gap: 20px;
+                z-index: 999;
+            }
+
+            .mobile-nav a {
+                color: var(--text-secondary);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 18px;
+                padding: 12px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .mobile-nav .btn {
+                margin-top: 12px;
+                text-align: center;
+            }
+
+            /* Hero Mobile */
+            .hero {
+                padding: 100px 0 60px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+                line-height: 1.2;
+                margin-bottom: 20px;
+            }
+
+            .hero p {
+                font-size: 18px;
+                line-height: 1.5;
+                margin-bottom: 32px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+                padding: 16px 24px;
+            }
+
+            .hero-stats {
+                gap: 32px;
+                margin-top: 60px;
+            }
+
+            .stat-number {
+                font-size: 42px;
+            }
+
+            .stat-label {
+                font-size: 13px;
+            }
+
+            /* Sections Mobile */
+            .section {
+                padding: 60px 0;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            /* Grid Mobile */
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            /* Cards Mobile */
+            .card {
+                padding: 32px 24px;
+            }
+
+            .card h3 {
+                font-size: 22px;
+            }
+
+            .card-icon {
+                font-size: 40px;
+                margin-bottom: 16px;
+            }
+
+            /* Section Titles Mobile */
+            .section-title {
+                font-size: 32px;
+                line-height: 1.2;
+                margin-bottom: 16px;
+            }
+
+            .section-subtitle {
+                font-size: 18px;
+                line-height: 1.5;
+                margin-bottom: 40px;
+            }
+
+            /* Demo Section Mobile */
+            .demo-section {
+                padding: 32px 20px;
+                border-radius: 16px;
+            }
+
+            .demo-section h2 {
+                font-size: 28px;
+                margin-bottom: 24px;
+            }
+
+            .demo-input {
+                padding: 16px;
+                font-size: 15px;
+                min-height: 100px;
+            }
+
+            .demo-section .btn {
+                padding: 16px 24px;
+                font-size: 16px;
+            }
+
+            /* Pricing Mobile */
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .pricing-card {
+                padding: 40px 28px;
+            }
+
+            .pricing-card h3 {
+                font-size: 24px;
+            }
+
+            .pricing-card .price {
+                font-size: 48px;
+            }
+
+            .pricing-card .price small {
+                font-size: 18px;
+            }
+
+            .pricing-card ul {
+                margin: 24px 0;
+            }
+
+            .pricing-card li {
+                padding: 10px 0;
+                font-size: 15px;
+            }
+
+            .popular-badge {
+                font-size: 11px;
+                padding: 6px 20px;
+            }
+
+            /* FAQ Mobile */
+            .faq-item {
+                padding: 24px 20px;
+            }
+
+            .faq-item h4 {
+                font-size: 18px;
+                margin-bottom: 10px;
+                line-height: 1.4;
+            }
+
+            .faq-item p {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            /* CTA Section Mobile */
+            .cta-section {
+                padding: 50px 24px;
+                border-radius: 16px;
+                margin: 40px 20px;
+            }
+
+            .cta-section h2 {
+                font-size: 32px;
+                line-height: 1.2;
+                margin-bottom: 20px;
+            }
+
+            .cta-section p {
+                font-size: 18px;
+                margin-bottom: 32px;
+            }
+
+            .cta-section .btn {
+                font-size: 16px;
+                padding: 16px 32px;
+                width: 100%;
+            }
+
+            .cta-features {
+                font-size: 13px;
+                margin-top: 20px;
+                line-height: 1.6;
+            }
+
+            /* Footer Mobile */
+            footer {
+                padding: 50px 20px 30px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                margin-bottom: 32px;
+            }
+
+            .footer-section h4 {
+                font-size: 18px;
+                margin-bottom: 16px;
+            }
+
+            .footer-section p,
+            .footer-section a {
+                font-size: 15px;
+            }
+
+            .footer-bottom {
+                padding-top: 32px;
+                font-size: 13px;
+            }
+
+            /* Buttons Mobile */
+            .btn {
+                padding: 14px 28px;
+                font-size: 15px;
+            }
+
+            .btn-secondary {
+                padding: 12px 26px;
+            }
+
+            /* Lang Toggle Mobile */
+            .lang-toggle {
+                padding: 4px;
+            }
+
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+
+        /* Small Mobile (< 400px) */
+        @media (max-width: 400px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .section-subtitle {
+                font-size: 16px;
+            }
+
+            .stat-number {
+                font-size: 36px;
+            }
+
+            .pricing-card .price {
+                font-size: 42px;
+            }
+
+            .cta-section h2 {
+                font-size: 28px;
+            }
+
+            .card {
+                padding: 28px 20px;
+            }
+
+            .demo-section {
+                padding: 28px 16px;
+            }
+        }
+
+        /* Landscape Mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .hero {
+                padding: 80px 0 50px;
+            }
+
+            .section {
+                padding: 50px 0;
+            }
+        }
+
+        /* Touch Optimization */
+        @media (hover: none) and (pointer: coarse) {
+            .btn,
+            .card,
+            .pricing-card,
+            .faq-item {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .btn:active {
+                transform: scale(0.98);
+            }
+
+            .card:active,
+            .pricing-card:active {
+                transform: translateY(-2px);
+            }
+        }
+    </style>
 </head>
-
 <body>
 
+<!-- Header -->
 <header>
-  <div class="container header-inner">
-    <div class="logo">ECIA</div>
-    <div class="lang">
-      <button class="active">FR</button>
-      <button>EN</button>
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">ECIA</div>
+            
+            <!-- Desktop Navigation -->
+            <nav>
+                <a href="#demo" data-i18n="nav-demo">Demo</a>
+                <a href="#pricing" data-i18n="nav-pricing">Pricing</a>
+                <a href="#faq" data-i18n="nav-faq">FAQ</a>
+                <div class="lang-toggle">
+                    <button class="lang-btn active" onclick="switchLang('fr')">FR</button>
+                    <button class="lang-btn" onclick="switchLang('en')">EN</button>
+                </div>
+                <a href="#pricing" class="btn" data-i18n="nav-cta">Start Free</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span id="menuIcon">☰</span>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
+            <a href="#demo" data-i18n="nav-demo" onclick="closeMobileMenu()">Demo</a>
+            <a href="#pricing" data-i18n="nav-pricing" onclick="closeMobileMenu()">Pricing</a>
+            <a href="#faq" data-i18n="nav-faq" onclick="closeMobileMenu()">FAQ</a>
+            <div class="lang-toggle">
+                <button class="lang-btn active" onclick="switchLang('fr')">FR</button>
+                <button class="lang-btn" onclick="switchLang('en')">EN</button>
+            </div>
+            <a href="#pricing" class="btn" data-i18n="nav-cta" onclick="closeMobileMenu()">Start Free</a>
+        </div>
     </div>
-  </div>
 </header>
 
+<!-- Hero Section -->
 <section class="hero">
-  <div class="container">
-    <h1>Arrête de deviner.<br>Crée des scripts viraux en 30 secondes.</h1>
-    <p>ECIA génère des scripts complets et prêts à tourner pour TikTok, Reels et Shorts. Plus besoin d’écrire pendant des heures.</p>
-    <a href="#pricing" class="cta">Essayer gratuitement</a>
-    <span class="cta-sub">Aucune carte bancaire • 2 scripts offerts</span>
+    <div class="container">
+        <h1 data-i18n="hero-title">Create viral scripts in 30 seconds with AI</h1>
+        <p data-i18n="hero-subtitle">ECIA generates complete, ready-to-shoot scripts for TikTok, Reels and Shorts. Stop wasting hours writing. Start creating content that converts.</p>
+        
+        <div class="hero-buttons">
+            <a href="#demo" class="btn" data-i18n="hero-cta-primary">Try ECIA Free</a>
+            <a href="#pricing" class="btn btn-secondary" data-i18n="hero-cta-secondary">See Pricing</a>
+        </div>
 
-    <div class="mock">
-      <small>Entrée</small>
-      <pre>« Comment perdre du gras sans faire de cardio »</pre>
-
-      <small>Script généré</small>
-      <pre>
-HOOK :
-Si tu penses encore que le cardio est la meilleure façon de perdre du gras,
-cette vidéo va tout changer.
-
-PROBLÈME :
-La plupart des gens brûlent des calories…
-mais détruisent leur muscle.
-
-SOLUTION :
-Voici ce qui fonctionne vraiment.
-
-CTA :
-Abonne-toi pour des stratégies simples et efficaces.
-      </pre>
-
-      <div class="scores">
-        <span>Clarté : 9,3</span>
-        <span>Émotion : 8,8</span>
-        <span>Curiosité : 9,6</span>
-      </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-number">2,847</span>
+                <span class="stat-label" data-i18n="stat-creators">Active creators</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">+340%</span>
+                <span class="stat-label" data-i18n="stat-retention">Average retention</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">15M+</span>
+                <span class="stat-label" data-i18n="stat-views">Views generated</span>
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 
-<section>
-  <div class="container">
-    <h2>Pourquoi les créateurs utilisent ECIA</h2>
-    <p class="subtitle">Ce n’est pas un gadget IA. C’est un assistant de contenu.</p>
-    <div class="grid">
-      <div class="card">
-        <h3>Optimisé pour la rétention</h3>
-        <p>Chaque script suit des structures qui captent l’attention dès les 3 premières secondes.</p>
-      </div>
-      <div class="card">
-        <h3>Zéro réflexion</h3>
-        <p>Tu lis, tu filmes, tu postes. Aucun talent en copywriting requis.</p>
-      </div>
-      <div class="card">
-        <h3>Mieux que ChatGPT</h3>
-        <p>Aucun prompt à écrire. Des scripts directement exploitables.</p>
-      </div>
+<!-- Demo Section -->
+<section class="section" id="demo">
+    <div class="container">
+        <h2 class="section-title" data-i18n="demo-title">🚀 Try ECIA now</h2>
+        <div class="demo-section">
+            <textarea 
+                class="demo-input" 
+                id="demoInput"
+                data-i18n-placeholder="demo-placeholder"
+                placeholder="Ex: In this video I'll show you how to make $1000/month online without investment..."
+            ></textarea>
+            <button class="btn" style="width: 100%;" onclick="alert('Demo: In production, this will generate 10 complete scripts via Claude API')" data-i18n="demo-button">
+                Generate 10 viral scripts
+            </button>
+        </div>
     </div>
-  </div>
 </section>
 
-<section id="pricing">
-  <div class="container">
-    <h2>Tarifs simples</h2>
-    <p class="subtitle">Tu payes uniquement ce que tu utilises.</p>
-
-    <div class="pricing">
-      <div class="price-card">
-        <h3>Gratuit</h3>
-        <div class="price">0€</div>
-        <ul>
-          <li>2 scripts / mois</li>
-          <li>Tous les formats</li>
-          <li>Sans carte bancaire</li>
-        </ul>
-      </div>
-
-      <div class="price-card">
-        <h3>Pro</h3>
-        <div class="price">19€</div>
-        <ul>
-          <li>60 scripts / mois</li>
-          <li>Plusieurs styles</li>
-          <li>Accès prioritaire</li>
-        </ul>
-      </div>
-
-      <div class="price-card">
-        <h3>Ultra</h3>
-        <div class="price">39€</div>
-        <ul>
-          <li>150 scripts / mois</li>
-          <li>Structuration avancée</li>
-          <li>Meilleures performances</li>
-        </ul>
-      </div>
+<!-- Problem Section -->
+<section class="section" style="background: var(--bg-secondary);">
+    <div class="container">
+        <h2 class="section-title" data-i18n="problem-title">The problem you're facing</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon">📉</div>
+                <h3 data-i18n="problem-1-title">90% failure rate</h3>
+                <p data-i18n="problem-1-desc">Most videos fail because the hook doesn't grab attention in the first 3 seconds. You lose your audience before they even discover your content.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⏰</div>
+                <h3 data-i18n="problem-2-title">Wasted time</h3>
+                <p data-i18n="problem-2-desc">You spend hours brainstorming scripts without knowing if they'll actually work. The process is slow, uncertain and exhausting.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎲</div>
+                <h3 data-i18n="problem-3-title">Random results</h3>
+                <p data-i18n="problem-3-desc">Some videos explode, others flop. Impossible to consistently reproduce success without a proven method.</p>
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 
+<!-- Solution Section -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title" data-i18n="solution-title">The ECIA solution</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon">⚡</div>
+                <h3 data-i18n="solution-1-title">Optimized AI</h3>
+                <p data-i18n="solution-1-desc">Our algorithm analyzes millions of viral scripts to generate the highest performing hooks for your niche.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h3 data-i18n="solution-2-title">Smart scoring</h3>
+                <p data-i18n="solution-2-desc">Each script receives a clarity, curiosity and emotion score. You know exactly which one to choose to maximize your chances.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🚀</div>
+                <h3 data-i18n="solution-3-title">100% automated</h3>
+                <p data-i18n="solution-3-desc">Paste your topic, click generate. In 30 seconds, you have 10 ready-to-shoot scripts. No skills required.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="section" id="pricing" style="background: var(--bg-secondary);">
+    <div class="container">
+        <h2 class="section-title" data-i18n="pricing-title">Simple and transparent pricing</h2>
+        <p class="section-subtitle" data-i18n="pricing-subtitle">Start free. Scale when ready.</p>
+        
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <h3 data-i18n="plan-free-name">Free</h3>
+                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-free-desc">To test ECIA</p>
+                <div class="price">0€</div>
+                <ul>
+                    <li data-i18n="plan-free-feat-1">2 scripts / month</li>
+                    <li data-i18n="plan-free-feat-2">All formats</li>
+                    <li data-i18n="plan-free-feat-3">Community support</li>
+                </ul>
+                <a href="#demo" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-free-cta">Start Free</a>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="pricing-card popular">
+                <div class="popular-badge" data-i18n="plan-popular-badge">🔥 POPULAR</div>
+                <h3 data-i18n="plan-pro-name">Pro</h3>
+                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-pro-desc">For active creators</p>
+                <div class="price">19€<small data-i18n="plan-price-month">/month</small></div>
+                <ul>
+                    <li data-i18n="plan-pro-feat-1">40 scripts / month</li>
+                    <li data-i18n="plan-pro-feat-2">3 tone styles</li>
+                    <li data-i18n="plan-pro-feat-3">Unlimited history</li>
+                    <li data-i18n="plan-pro-feat-4">PDF export</li>
+                    <li data-i18n="plan-pro-feat-5">Priority support</li>
+                </ul>
+                <a href="#" class="btn" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-pro-cta">Get Pro</a>
+                <div style="background: rgba(34, 197, 94, 0.1); border: 2px solid rgba(34, 197, 94, 0.3); padding: 16px; border-radius: 12px; margin-top: 20px; font-size: 14px; font-weight: 600; color: #22c55e;" data-i18n="plan-guarantee">
+                    ✓ 30-day money-back guarantee
+                </div>
+            </div>
+
+            <!-- Ultra Plan -->
+            <div class="pricing-card">
+                <h3 data-i18n="plan-ultra-name">Ultra</h3>
+                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-ultra-desc">For pros & agencies</p>
+                <div class="price">39€<small data-i18n="plan-price-month">/month</small></div>
+                <ul>
+                    <li data-i18n="plan-ultra-feat-1">100 scripts / month</li>
+                    <li data-i18n="plan-ultra-feat-2">5 tone styles</li>
+                    <li data-i18n="plan-ultra-feat-3">Competitor analysis</li>
+                    <li data-i18n="plan-ultra-feat-4">Custom scripts</li>
+                    <li data-i18n="plan-ultra-feat-5">Ultra-priority support</li>
+                </ul>
+                <a href="#" class="btn" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-ultra-cta">Get Ultra</a>
+                <div style="background: rgba(34, 197, 94, 0.1); border: 2px solid rgba(34, 197, 94, 0.3); padding: 16px; border-radius: 12px; margin-top: 20px; font-size: 14px; font-weight: 600; color: #22c55e;" data-i18n="plan-guarantee">
+                    ✓ 30-day money-back guarantee
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section" id="faq">
+    <div class="container" style="max-width: 900px;">
+        <h2 class="section-title" data-i18n="faq-title">Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <h4 data-i18n="faq-1-q">Does ECIA work for all niches?</h4>
+            <p data-i18n="faq-1-a">Yes, absolutely. Whether you're in fitness, business, lifestyle, education or any other niche, ECIA adapts its scripts to your specific theme. The AI has been trained on millions of viral content from all categories.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4 data-i18n="faq-2-q">Can I cancel my subscription anytime?</h4>
+            <p data-i18n="faq-2-a">Yes, you can cancel with one click from your account. No commitment, no minimum period. If you cancel, you keep access until the end of your paid period. And we offer a 30-day money-back guarantee.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4 data-i18n="faq-3-q">Is it suitable for beginners?</h4>
+            <p data-i18n="faq-3-a">Absolutely! ECIA is designed to be ultra-simple. No marketing, copywriting or AI knowledge needed. You paste your idea, the tool does the rest. Many beginners get better scripts than experienced creators thanks to ECIA.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4 data-i18n="faq-4-q">Are the generated scripts truly unique?</h4>
+            <p data-i18n="faq-4-a">Yes, each script is uniquely generated for your content. The AI never literally copies existing scripts. It understands the patterns that work and creates original variations adapted to your specific topic.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section">
+    <div class="container">
+        <div class="cta-section">
+            <h2 data-i18n="cta-title">Ready to create scripts that stop the scroll?</h2>
+            <p data-i18n="cta-subtitle">Join 2,847 creators boosting their retention with ECIA</p>
+            <a href="#demo" class="btn" data-i18n="cta-button">Start Free →</a>
+            <p class="cta-features" data-i18n="cta-features">✓ No credit card required • ✓ 2 free scripts • ✓ Results in 30 seconds</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
 <footer>
-  © 2025 ECIA — contact@ecia.io
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ECIA</h4>
+                <p data-i18n="footer-desc">The AI that transforms your ideas into viral scripts. Create content that captivates, retains and converts.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 data-i18n="footer-product-title">Product</h4>
+                <a href="#demo" data-i18n="footer-demo">Demo</a>
+                <a href="#pricing" data-i18n="footer-pricing">Pricing</a>
+                <a href="#faq" data-i18n="footer-faq">FAQ</a>
+            </div>
+            
+            <div class="footer-section">
+                <h4 data-i18n="footer-legal-title">Legal</h4>
+                <a href="#" data-i18n="footer-terms">Terms</a>
+                <a href="#" data-i18n="footer-privacy">Privacy</a>
+                <a href="#" data-i18n="footer-legal">Legal Notice</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 ECIA — All rights reserved</p>
+            <p style="margin-top: 8px;">Contact: contact@ecia.io</p>
+        </div>
+    </div>
 </footer>
+
+<script>
+    // Translations
+    const translations = {
+        fr: {
+            // Navigation
+            'nav-demo': 'Démo',
+            'nav-pricing': 'Tarifs',
+            'nav-faq': 'FAQ',
+            'nav-cta': 'Commencer gratuitement',
+            
+            // Hero
+            'hero-title': 'Créez des scripts viraux en 30 secondes avec l\'IA',
+            'hero-subtitle': 'ECIA génère des scripts complets et prêts à tourner pour TikTok, Reels et Shorts. Arrêtez de perdre des heures à écrire. Commencez à créer du contenu qui convertit.',
+            'hero-cta-primary': 'Essayer ECIA gratuitement',
+            'hero-cta-secondary': 'Voir les tarifs',
+            
+            // Stats
+            'stat-creators': 'Créateurs actifs',
+            'stat-retention': 'Rétention moyenne',
+            'stat-views': 'Vues générées',
+            
+            // Demo
+            'demo-title': '🚀 Testez ECIA maintenant',
+            'demo-placeholder': 'Ex: Dans cette vidéo je vais vous montrer comment gagner 1000€ par mois en ligne sans investissement...',
+            'demo-button': 'Générer 10 scripts viraux',
+            
+            // Problem
+            'problem-title': 'Le problème que vous rencontrez',
+            'problem-1-title': '90% d\'échec',
+            'problem-1-desc': 'La majorité des vidéos échouent car le hook n\'accroche pas dans les 3 premières secondes. Vous perdez votre audience avant même qu\'elle ne découvre votre contenu.',
+            'problem-2-title': 'Temps perdu',
+            'problem-2-desc': 'Vous passez des heures à brainstormer des scripts, sans savoir s\'ils fonctionneront vraiment. Le processus est lent, incertain et épuisant.',
+            'problem-3-title': 'Résultats aléatoires',
+            'problem-3-desc': 'Certaines vidéos explosent, d\'autres font un flop. Impossible de reproduire le succès de manière consistante sans une méthode éprouvée.',
+            
+            // Solution
+            'solution-title': 'La solution ECIA',
+            'solution-1-title': 'IA optimisée',
+            'solution-1-desc': 'Notre algorithme analyse des millions de scripts viraux pour générer les accroches les plus performantes pour votre niche.',
+            'solution-2-title': 'Scoring intelligent',
+            'solution-2-desc': 'Chaque script reçoit un score de clarté, curiosité et émotion. Vous savez exactement lequel choisir pour maximiser vos chances.',
+            'solution-3-title': '100% automatisé',
+            'solution-3-desc': 'Collez votre sujet, cliquez sur générer. En 30 secondes, vous avez 10 scripts prêts à tourner. Aucune compétence requise.',
+            
+            // Pricing
+            'pricing-title': 'Tarifs simples et transparents',
+            'pricing-subtitle': 'Commencez gratuitement. Évoluez quand vous êtes prêt.',
+            'plan-popular-badge': '🔥 POPULAIRE',
+            'plan-price-month': '/mois',
+            
+            'plan-free-name': 'Gratuit',
+            'plan-free-desc': 'Pour tester ECIA',
+            'plan-free-feat-1': '2 scripts / mois',
+            'plan-free-feat-2': 'Tous les formats',
+            'plan-free-feat-3': 'Support communauté',
+            'plan-free-cta': 'Commencer gratuitement',
+            
+            'plan-pro-name': 'Pro',
+            'plan-pro-desc': 'Pour créateurs actifs',
+            'plan-pro-feat-1': '40 scripts / mois',
+            'plan-pro-feat-2': '3 styles de ton',
+            'plan-pro-feat-3': 'Historique illimité',
+            'plan-pro-feat-4': 'Export PDF',
+            'plan-pro-feat-5': 'Support prioritaire',
+            'plan-pro-cta': 'Passer à Pro',
+            
+            'plan-ultra-name': 'Ultra',
+            'plan-ultra-desc': 'Pour pros & agences',
+            'plan-ultra-feat-1': '100 scripts / mois',
+            'plan-ultra-feat-2': '5 styles de ton',
+            'plan-ultra-feat-3': 'Analyse concurrence',
+            'plan-ultra-feat-4': 'Scripts personnalisés',
+            'plan-ultra-feat-5': 'Support ultra-prioritaire',
+            'plan-ultra-cta': 'Passer à Ultra',
+            
+            'plan-guarantee': '✓ Garantie satisfait ou remboursé 30 jours',
+            
+            // FAQ
+            'faq-title': 'Questions fréquentes',
+            'faq-1-q': 'ECIA fonctionne-t-il pour toutes les niches ?',
+            'faq-1-a': 'Oui, absolument. Que vous soyez dans le fitness, le business, le lifestyle, l\'éducation ou toute autre niche, ECIA adapte ses scripts à votre thématique spécifique. L\'IA a été entraînée sur des millions de contenus viraux de toutes les catégories.',
+            'faq-2-q': 'Puis-je annuler mon abonnement à tout moment ?',
+            'faq-2-a': 'Oui, vous pouvez annuler en un clic depuis votre compte. Aucun engagement, aucune période minimale. Si vous annulez, vous gardez l\'accès jusqu\'à la fin de votre période payée. Et nous offrons une garantie satisfait ou remboursé de 30 jours.',
+            'faq-3-q': 'Est-ce adapté aux débutants ?',
+            'faq-3-a': 'Absolument ! ECIA est conçu pour être ultra-simple. Pas besoin de connaissances en marketing, copywriting ou IA. Vous collez votre idée, l\'outil fait le reste. De nombreux débutants obtiennent de meilleurs scripts que des créateurs expérimentés grâce à ECIA.',
+            'faq-4-q': 'Les scripts générés sont-ils vraiment uniques ?',
+            'faq-4-a': 'Oui, chaque script est généré de manière unique pour votre contenu. L\'IA ne copie jamais textuellement des scripts existants. Elle comprend les patterns qui fonctionnent et crée des variations originales adaptées à votre sujet précis.',
+            
+            // CTA
+            'cta-title': 'Prêt à créer des scripts qui arrêtent le scroll ?',
+            'cta-subtitle': 'Rejoignez 2,847 créateurs qui boostent leur rétention avec ECIA',
+            'cta-button': 'Commencer gratuitement →',
+            'cta-features': '✓ Aucune carte bancaire requise • ✓ 2 scripts gratuits • ✓ Résultats en 30 secondes',
+            
+            // Footer
+            'footer-desc': 'L\'IA qui transforme vos idées en scripts viraux. Créez du contenu qui captive, retient et convertit.',
+            'footer-product-title': 'Produit',
+            'footer-demo': 'Démo',
+            'footer-pricing': 'Tarifs',
+            'footer-faq': 'FAQ',
+            'footer-legal-title': 'Légal',
+            'footer-terms': 'CGV',
+            'footer-privacy': 'Confidentialité',
+            'footer-legal': 'Mentions légales'
+        },
+        en: {
+            // Navigation
+            'nav-demo': 'Demo',
+            'nav-pricing': 'Pricing',
+            'nav-faq': 'FAQ',
+            'nav-cta': 'Start Free',
+            
+            // Hero
+            'hero-title': 'Create viral scripts in 30 seconds with AI',
+            'hero-subtitle': 'ECIA generates complete, ready-to-shoot scripts for TikTok, Reels and Shorts. Stop wasting hours writing. Start creating content that converts.',
+            'hero-cta-primary': 'Try ECIA Free',
+            'hero-cta-secondary': 'See Pricing',
+            
+            // Stats
+            'stat-creators': 'Active creators',
+            'stat-retention': 'Average retention',
+            'stat-views': 'Views generated',
+            
+            // Demo
+            'demo-title': '🚀 Try ECIA now',
+            'demo-placeholder': 'Ex: In this video I\'ll show you how to make $1000/month online without investment...',
+            'demo-button': 'Generate 10 viral scripts',
+            
+            // Problem
+            'problem-title': 'The problem you\'re facing',
+            'problem-1-title': '90% failure rate',
+            'problem-1-desc': 'Most videos fail because the hook doesn\'t grab attention in the first 3 seconds. You lose your audience before they even discover your content.',
+            'problem-2-title': 'Wasted time',
+            'problem-2-desc': 'You spend hours brainstorming scripts without knowing if they\'ll actually work. The process is slow, uncertain and exhausting.',
+            'problem-3-title': 'Random results',
+            'problem-3-desc': 'Some videos explode, others flop. Impossible to consistently reproduce success without a proven method.',
+            
+            // Solution
+            'solution-title': 'The ECIA solution',
+            'solution-1-title': 'Optimized AI',
+            'solution-1-desc': 'Our algorithm analyzes millions of viral scripts to generate the highest performing hooks for your niche.',
+            'solution-2-title': 'Smart scoring',
+            'solution-2-desc': 'Each script receives a clarity, curiosity and emotion score. You know exactly which one to choose to maximize your chances.',
+            'solution-3-title': '100% automated',
+            'solution-3-desc': 'Paste your topic, click generate. In 30 seconds, you have 10 ready-to-shoot scripts. No skills required.',
+            
+            // Pricing
+            'pricing-title': 'Simple and transparent pricing',
+            'pricing-subtitle': 'Start free. Scale when ready.',
+            'plan-popular-badge': '🔥 POPULAR',
+            'plan-price-month': '/month',
+            
+            'plan-free-name': 'Free',
+            'plan-free-desc': 'To test ECIA',
+            'plan-free-feat-1': '2 scripts / month',
+            'plan-free-feat-2': 'All formats',
+            'plan-free-feat-3': 'Community support',
+            'plan-free-cta': 'Start Free',
+            
+            'plan-pro-name': 'Pro',
+            'plan-pro-desc': 'For active creators',
+            'plan-pro-feat-1': '40 scripts / month',
+            'plan-pro-feat-2': '3 tone styles',
+            'plan-pro-feat-3': 'Unlimited history',
+            'plan-pro-feat-4': 'PDF export',
+            'plan-pro-feat-5': 'Priority support',
+            'plan-pro-cta': 'Get Pro',
+            
+            'plan-ultra-name': 'Ultra',
+            'plan-ultra-desc': 'For pros & agencies',
+            'plan-ultra-feat-1': '100 scripts / month',
+            'plan-ultra-feat-2': '5 tone styles',
+            'plan-ultra-feat-3': 'Competitor analysis',
+            'plan-ultra-feat-4': 'Custom scripts',
+            'plan-ultra-feat-5': 'Ultra-priority support',
+            'plan-ultra-cta': 'Get Ultra',
+            
+            'plan-guarantee': '✓ 30-day money-back guarantee',
+            
+            // FAQ
+            'faq-title': 'Frequently Asked Questions',
+            'faq-1-q': 'Does ECIA work for all niches?',
+            'faq-1-a': 'Yes, absolutely. Whether you\'re in fitness, business, lifestyle, education or any other niche, ECIA adapts its scripts to your specific theme. The AI has been trained on millions of viral content from all categories.',
+            'faq-2-q': 'Can I cancel my subscription anytime?',
+            'faq-2-a': 'Yes, you can cancel with one click from your account. No commitment, no minimum period. If you cancel, you keep access until the end of your paid period. And we offer a 30-day money-back guarantee.',
+            'faq-3-q': 'Is it suitable for beginners?',
+            'faq-3-a': 'Absolutely! ECIA is designed to be ultra-simple. No marketing, copywriting or AI knowledge needed. You paste your idea, the tool does the rest. Many beginners get better scripts than experienced creators thanks to ECIA.',
+            'faq-4-q': 'Are the generated scripts truly unique?',
+            'faq-4-a': 'Yes, each script is uniquely generated for your content. The AI never literally copies existing scripts. It understands the patterns that work and creates original variations adapted to your specific topic.',
+            
+            // CTA
+            'cta-title': 'Ready to create scripts that stop the scroll?',
+            'cta-subtitle': 'Join 2,847 creators boosting their retention with ECIA',
+            'cta-button': 'Start Free →',
+            'cta-features': '✓ No credit card required • ✓ 2 free scripts • ✓ Results in 30 seconds',
+            
+            // Footer
+            'footer-desc': 'The AI that transforms your ideas into viral scripts. Create content that captivates, retains and converts.',
+            'footer-product-title': 'Product',
+            'footer-demo': 'Demo',
+            'footer-pricing': 'Pricing',
+            'footer-faq': 'FAQ',
+            'footer-legal-title': 'Legal',
+            'footer-terms': 'Terms',
+            'footer-privacy': 'Privacy',
+            'footer-legal': 'Legal Notice'
+        }
+    };
+
+    let currentLang = 'fr';
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+        const mobileNav = document.getElementById('mobileNav');
+        const menuIcon = document.getElementById('menuIcon');
+        
+        if (mobileNav.classList.contains('active')) {
+            mobileNav.classList.remove('active');
+            menuIcon.textContent = '☰';
+        } else {
+            mobileNav.classList.add('active');
+            menuIcon.textContent = '✕';
+        }
+    }
+
+    function closeMobileMenu() {
+        const mobileNav = document.getElementById('mobileNav');
+        const menuIcon = document.getElementById('menuIcon');
+        mobileNav.classList.remove('active');
+        menuIcon.textContent = '☰';
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const mobileNav = document.getElementById('mobileNav');
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        
+        if (mobileNav && mobileNav.classList.contains('active')) {
+            if (!mobileNav.contains(event.target) && !menuBtn.contains(event.target)) {
+                closeMobileMenu();
+            }
+        }
+    });
+
+    function switchLang(lang) {
+        currentLang = lang;
+        
+        // Update button states in both desktop and mobile nav
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.textContent === lang.toUpperCase()) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // Update HTML lang attribute
+        document.documentElement.lang = lang;
+        
+        // Update all translatable elements
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[lang][key]) {
+                element.textContent = translations[lang][key];
+            }
+        });
+        
+        // Update placeholder
+        const demoInput = document.getElementById('demoInput');
+        if (demoInput) {
+            demoInput.placeholder = translations[lang]['demo-placeholder'];
+        }
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Initialize with French
+    window.addEventListener('DOMContentLoaded', () => {
+        switchLang('fr');
+    });
+
+    // Close mobile menu on resize to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            closeMobileMenu();
+        }
+    });
+</script>
 
 </body>
 </html>
