@@ -1,1050 +1,374 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ECIA – Générateur de hooks viraux par IA</title>
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #0a0a0f;
-  color: #ffffff;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* Header */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 60px;
-  background: rgba(11, 11, 15, 0.95);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid rgba(108, 92, 255, 0.1);
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #6c5cff 0%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-nav {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-nav a {
-  color: rgba(255,255,255,0.8);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-
-nav a:hover {
-  color: #6c5cff;
-}
-
-.lang-toggle {
-  display: flex;
-  gap: 8px;
-  font-size: 14px;
-}
-
-.lang-toggle span {
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.3s;
-}
-
-.lang-toggle span:hover {
-  background: rgba(108, 92, 255, 0.2);
-}
-
-.btn {
-  background: linear-gradient(135deg, #6c5cff 0%, #7c6cff 100%);
-  padding: 12px 28px;
-  border-radius: 8px;
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: inline-block;
-  border: none;
-  cursor: pointer;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(108, 92, 255, 0.4);
-}
-
-.btn-secondary {
-  background: transparent;
-  border: 2px solid #6c5cff;
-  padding: 10px 26px;
-}
-
-.btn-secondary:hover {
-  background: rgba(108, 92, 255, 0.1);
-}
-
-/* Sections */
-section {
-  padding: 100px 60px;
-  max-width: 1400px;
-  margin: auto;
-}
-
-/* Hero */
-.hero {
-  text-align: center;
-  padding: 120px 60px 80px;
-  background: radial-gradient(ellipse at top, rgba(108, 92, 255, 0.15) 0%, transparent 60%);
-}
-
-.hero h1 {
-  font-size: 64px;
-  line-height: 1.1;
-  margin-bottom: 24px;
-  background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.hero p {
-  font-size: 22px;
-  opacity: 0.8;
-  max-width: 700px;
-  margin: 0 auto 40px;
-}
-
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: 60px;
-  margin-top: 60px;
-  flex-wrap: wrap;
-}
-
-.stat {
-  text-align: center;
-}
-
-.stat-number {
-  font-size: 48px;
-  font-weight: 700;
-  color: #6c5cff;
-  display: block;
-}
-
-.stat-label {
-  font-size: 14px;
-  opacity: 0.7;
-  margin-top: 8px;
-}
-
-/* Demo Interactive */
-.demo-section {
-  background: linear-gradient(135deg, #151521 0%, #1a1a2e 100%);
-  border-radius: 20px;
-  padding: 60px;
-  margin: 80px auto;
-  max-width: 1000px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-}
-
-.demo-section h2 {
-  text-align: center;
-  font-size: 36px;
-  margin-bottom: 40px;
-}
-
-.demo-input {
-  width: 100%;
-  padding: 20px;
-  background: rgba(255,255,255,0.05);
-  border: 2px solid rgba(108, 92, 255, 0.3);
-  border-radius: 12px;
-  color: white;
-  font-size: 16px;
-  margin-bottom: 20px;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 100px;
-}
-
-.demo-input:focus {
-  outline: none;
-  border-color: #6c5cff;
-  background: rgba(255,255,255,0.08);
-}
-
-.demo-result {
-  background: rgba(0,0,0,0.3);
-  border-radius: 12px;
-  padding: 24px;
-  margin-top: 20px;
-  display: none;
-}
-
-.hook-example {
-  background: rgba(108, 92, 255, 0.1);
-  padding: 16px;
-  border-radius: 8px;
-  border-left: 4px solid #6c5cff;
-  margin: 12px 0;
-}
-
-.hook-score {
-  display: flex;
-  gap: 16px;
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-.score-item {
-  background: rgba(255,255,255,0.05);
-  padding: 6px 12px;
-  border-radius: 6px;
-}
-
-/* Grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  margin-top: 60px;
-}
-
-.grid-2 {
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-}
-
-.card {
-  background: linear-gradient(135deg, #151521 0%, #1a1a2e 100%);
-  padding: 40px;
-  border-radius: 16px;
-  border: 1px solid rgba(108, 92, 255, 0.2);
-  transition: transform 0.3s, border-color 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(108, 92, 255, 0.5);
-}
-
-.card h3 {
-  font-size: 24px;
-  margin-bottom: 16px;
-  color: #6c5cff;
-}
-
-/* Examples Section */
-.examples {
-  background: rgba(108, 92, 255, 0.03);
-  padding: 80px 60px;
-}
-
-.example-comparison {
-  background: #151521;
-  border-radius: 16px;
-  padding: 40px;
-  margin: 30px 0;
-}
-
-.example-comparison h4 {
-  color: #6c5cff;
-  margin-bottom: 24px;
-  font-size: 18px;
-}
-
-.hook-comparison {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 20px;
-}
-
-.hook-bad, .hook-good {
-  padding: 20px;
-  border-radius: 12px;
-  position: relative;
-}
-
-.hook-bad {
-  background: rgba(239, 68, 68, 0.1);
-  border: 2px solid rgba(239, 68, 68, 0.3);
-}
-
-.hook-good {
-  background: rgba(34, 197, 94, 0.1);
-  border: 2px solid rgba(34, 197, 94, 0.3);
-}
-
-.hook-label {
-  font-weight: 700;
-  font-size: 14px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.score-badge {
-  background: #6c5cff;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* Pricing */
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  margin-top: 60px;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.pricing-card {
-  background: linear-gradient(135deg, #151521 0%, #1a1a2e 100%);
-  padding: 48px 36px;
-  border-radius: 20px;
-  border: 2px solid rgba(108, 92, 255, 0.2);
-  text-align: center;
-  position: relative;
-  transition: all 0.3s;
-}
-
-.pricing-card:hover {
-  transform: translateY(-8px);
-  border-color: #6c5cff;
-  box-shadow: 0 20px 60px rgba(108, 92, 255, 0.3);
-}
-
-.pricing-card.popular {
-  border-color: #6c5cff;
-  box-shadow: 0 10px 40px rgba(108, 92, 255, 0.3);
-}
-
-.popular-badge {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #6c5cff 0%, #7c6cff 100%);
-  padding: 6px 20px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.pricing-card h3 {
-  font-size: 28px;
-  margin-bottom: 12px;
-}
-
-.pricing-card .price {
-  font-size: 48px;
-  font-weight: 700;
-  color: #6c5cff;
-  margin: 24px 0;
-}
-
-.pricing-card .price small {
-  font-size: 18px;
-  opacity: 0.7;
-}
-
-.pricing-card ul {
-  list-style: none;
-  margin: 32px 0;
-  text-align: left;
-}
-
-.pricing-card li {
-  padding: 12px 0;
-  opacity: 0.9;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.pricing-card li:before {
-  content: "✓";
-  color: #6c5cff;
-  font-weight: 700;
-  font-size: 18px;
-}
-
-/* Social Proof */
-.social-proof {
-  text-align: center;
-  padding: 80px 60px;
-  background: rgba(108, 92, 255, 0.03);
-}
-
-.testimonial {
-  background: #151521;
-  padding: 40px;
-  border-radius: 16px;
-  max-width: 800px;
-  margin: 40px auto;
-  border-left: 4px solid #6c5cff;
-}
-
-.testimonial-text {
-  font-size: 18px;
-  font-style: italic;
-  margin-bottom: 20px;
-  opacity: 0.9;
-}
-
-.testimonial-author {
-  font-weight: 600;
-  color: #6c5cff;
-}
-
-/* FAQ */
-.faq-section {
-  max-width: 900px;
-  margin: auto;
-}
-
-.faq-item {
-  background: #151521;
-  padding: 32px;
-  border-radius: 12px;
-  margin: 20px 0;
-  border: 1px solid rgba(108, 92, 255, 0.2);
-}
-
-.faq-item h4 {
-  color: #6c5cff;
-  font-size: 20px;
-  margin-bottom: 12px;
-}
-
-/* Footer */
-footer {
-  background: #07070a;
-  padding: 60px 60px 40px;
-  border-top: 1px solid rgba(108, 92, 255, 0.1);
-}
-
-.footer-content {
-  max-width: 1400px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 60px;
-  margin-bottom: 40px;
-}
-
-.footer-section h4 {
-  margin-bottom: 20px;
-  color: #6c5cff;
-}
-
-.footer-section a {
-  display: block;
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-  margin: 12px 0;
-  transition: color 0.3s;
-}
-
-.footer-section a:hover {
-  color: #6c5cff;
-}
-
-.footer-bottom {
-  text-align: center;
-  padding-top: 40px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  opacity: 0.6;
-  font-size: 14px;
-}
-
-.guarantee {
-  background: rgba(34, 197, 94, 0.1);
-  border: 2px solid rgba(34, 197, 94, 0.3);
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  margin-top: 24px;
-  font-weight: 600;
-  color: #22c55e;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  header {
-    padding: 20px 24px;
-  }
-  
-  nav {
-    gap: 16px;
-  }
-  
-  section {
-    padding: 60px 24px;
-  }
-  
-  .hero h1 {
-    font-size: 40px;
-  }
-  
-  .hero p {
-    font-size: 18px;
-  }
-  
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .hook-comparison {
-    grid-template-columns: 1fr;
-  }
-  
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-  
-  .demo-section {
-    padding: 40px 24px;
-  }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECIA — AI Script Generator for TikTok, Reels & Shorts</title>
+  <meta name="description" content="ECIA generates complete viral scripts for TikTok, Reels & Shorts in 30 seconds. Stop guessing. Start converting." />
+
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --bg-soft: #12121c;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --primary: #4f7cff;
+      --primary-soft: rgba(79,124,255,0.15);
+      --text: #ffffff;
+      --text-soft: rgba(255,255,255,0.7);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+      background: radial-gradient(1200px 600px at 50% -10%, rgba(79,124,255,0.15), transparent), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,11,18,0.85);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #fff, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lang {
+      display: flex;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .lang button {
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .lang button.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 6vw, 52px);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      color: var(--text-soft);
+      font-size: clamp(16px, 3.5vw, 20px);
+      max-width: 720px;
+      margin: 0 auto 32px;
+    }
+
+    .cta {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary), #6aa2ff);
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      box-shadow: 0 12px 40px rgba(79,124,255,0.35);
+    }
+
+    .cta-sub {
+      display: block;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    /* MOCK */
+    .mock {
+      margin-top: 50px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      text-align: left;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      backdrop-filter: blur(12px);
+    }
+
+    .mock small {
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .mock pre {
+      margin-top: 14px;
+      background: #0f0f18;
+      border-radius: 10px;
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .scores {
+      display: flex;
+      gap: 14px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 70px 0;
+    }
+
+    h2 {
+      font-size: clamp(26px, 5vw, 40px);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-soft);
+      max-width: 640px;
+      margin: 0 auto 50px;
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+    }
+
+    .card h3 {
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--text-soft);
+      font-size: 15px;
+    }
+
+    /* PRICING */
+    .pricing {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+      gap: 24px;
+    }
+
+    .price-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .price {
+      font-size: 42px;
+      font-weight: 800;
+      margin: 14px 0;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    ul li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--text-soft);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 14px;
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      .mock pre {
+        font-size: 13px;
+      }
+    }
+  </style>
 </head>
 
-<body onload="toggleLang('fr')">
+<body>
 
 <header>
-  <div class="logo">ECIA</div>
-  <nav>
-    <a href="#demo">Démo</a>
-    <a href="#examples">Exemples</a>
-    <a href="#pricing">Tarifs</a>
-    <a href="#faq">FAQ</a>
-    <div class="lang-toggle">
-      <span onclick="toggleLang('fr')">🇫🇷</span>
-      <span onclick="toggleLang('en')">🇬🇧</span>
+  <div class="container header-inner">
+    <div class="logo">ECIA</div>
+    <div class="lang">
+      <button class="active">EN</button>
+      <button>FR</button>
     </div>
-    <a class="btn" href="#pricing">Commencer gratuitement</a>
-  </nav>
+  </div>
 </header>
 
 <section class="hero">
-  <div data-lang="fr">
-    <h1>Créez des hooks viraux qui arrêtent le scroll en 1 seconde</h1>
-    <p>L'IA qui génère des accroches irrésistibles pour TikTok, Reels et Shorts. Boostez votre rétention et vos vues dès aujourd'hui.</p>
-    <div style="display: flex; gap: 16px; justify-content: center; margin-top: 32px;">
-      <a class="btn" href="#demo">Tester gratuitement</a>
-      <a class="btn btn-secondary" href="#examples">Voir des exemples</a>
-    </div>
-    
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-number">2,847</span>
-        <span class="stat-label">Créateurs actifs</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">+340%</span>
-        <span class="stat-label">Rétention moyenne</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">15M+</span>
-        <span class="stat-label">Vues générées</span>
-      </div>
-    </div>
-  </div>
-  
-  <div data-lang="en" style="display:none;">
-    <h1>Create viral hooks that stop the scroll in 1 second</h1>
-    <p>The AI that generates irresistible hooks for TikTok, Reels and Shorts. Boost your retention and views today.</p>
-    <div style="display: flex; gap: 16px; justify-content: center; margin-top: 32px;">
-      <a class="btn" href="#demo">Try for free</a>
-      <a class="btn btn-secondary" href="#examples">See examples</a>
-    </div>
-    
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-number">2,847</span>
-        <span class="stat-label">Active creators</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">+340%</span>
-        <span class="stat-label">Average retention</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">15M+</span>
-        <span class="stat-label">Views generated</span>
-      </div>
-    </div>
-  </div>
-</section>
+  <div class="container">
+    <h1>Stop guessing.<br>Create viral scripts in 30 seconds.</h1>
+    <p>ECIA generates complete, ready-to-film TikTok, Reels & Shorts scripts — structured, optimized and proven to retain attention.</p>
+    <a href="#pricing" class="cta">Try ECIA Free</a>
+    <span class="cta-sub">No credit card • 2 scripts included</span>
 
-<section id="demo">
-  <div class="demo-section">
-    <h2 data-lang="fr">🚀 Testez ECIA maintenant</h2>
-    <h2 data-lang="en" style="display:none;">🚀 Try ECIA now</h2>
-    
-    <textarea 
-      class="demo-input" 
-      id="demoInput" 
-      placeholder="Ex: Dans cette vidéo je vais vous montrer comment gagner 1000€ par mois en ligne sans investissement..."
-    ></textarea>
-    
-    <button class="btn" onclick="generateHooks()" style="width: 100%;">
-      <span data-lang="fr">Générer 10 hooks viraux</span>
-      <span data-lang="en" style="display:none;">Generate 10 viral hooks</span>
-    </button>
-    
-    <div class="demo-result" id="demoResult">
-      <div class="hook-example">
-        <div style="font-weight: 600; margin-bottom: 8px;">🔥 Hook #1</div>
-        <div>"J'ai perdu 5000€ avant de découvrir CETTE méthode qui me rapporte 1000€/mois..."</div>
-        <div class="hook-score">
-          <span class="score-item">📊 Clarté: 9.2/10</span>
-          <span class="score-item">🎯 Curiosité: 9.8/10</span>
-          <span class="score-item">❤️ Émotion: 8.7/10</span>
-        </div>
-      </div>
-      
-      <div class="hook-example">
-        <div style="font-weight: 600; margin-bottom: 8px;">⚡ Hook #2</div>
-        <div>"Ce que personne ne vous dit sur gagner de l'argent en ligne (et ça change TOUT)"</div>
-        <div class="hook-score">
-          <span class="score-item">📊 Clarté: 8.5/10</span>
-          <span class="score-item">🎯 Curiosité: 9.5/10</span>
-          <span class="score-item">❤️ Émotion: 7.9/10</span>
-        </div>
-      </div>
-      
-      <div class="hook-example">
-        <div style="font-weight: 600; margin-bottom: 8px;">💎 Hook #3</div>
-        <div>"1000€/mois en 2025 : voici la méthode que 90% ignorent encore"</div>
-        <div class="hook-score">
-          <span class="score-item">📊 Clarté: 9.0/10</span>
-          <span class="score-item">🎯 Curiosité: 8.8/10</span>
-          <span class="score-item">❤️ Émotion: 7.5/10</span>
-        </div>
+    <div class="mock">
+      <small>Input</small>
+      <pre>“How to lose fat without doing cardio”</pre>
+
+      <small>Generated Script</small>
+      <pre>
+HOOK:
+If you still think cardio is the best way to lose fat, this will change everything.
+
+PROBLEM:
+Most people burn calories… but destroy muscle.
+
+SOLUTION:
+Here’s what actually works instead.
+
+CTA:
+Follow for real fat loss strategies.
+      </pre>
+
+      <div class="scores">
+        <span>Clarity: 9.3</span>
+        <span>Emotion: 8.8</span>
+        <span>Curiosity: 9.6</span>
       </div>
     </div>
   </div>
 </section>
 
 <section>
-  <h2 data-lang="fr" style="text-align: center; font-size: 42px; margin-bottom: 20px;">Le problème que vous rencontrez</h2>
-  <h2 data-lang="en" style="display:none; text-align: center; font-size: 42px; margin-bottom: 20px;">The problem you're facing</h2>
-  
-  <div class="grid">
-    <div class="card">
-      <h3 data-lang="fr">📉 90% d'échec</h3>
-      <h3 data-lang="en" style="display:none;">📉 90% failure rate</h3>
-      <p data-lang="fr">La majorité des vidéos échouent car le hook n'accroche pas dans les 3 premières secondes. Vous perdez votre audience avant même qu'elle ne découvre votre contenu.</p>
-      <p data-lang="en" style="display:none;">Most videos fail because the hook doesn't grab attention in the first 3 seconds. You lose your audience before they even discover your content.</p>
-    </div>
-    
-    <div class="card">
-      <h3 data-lang="fr">⏰ Temps perdu</h3>
-      <h3 data-lang="en" style="display:none;">⏰ Wasted time</h3>
-      <p data-lang="fr">Vous passez des heures à brainstormer des accroches, sans savoir si elles fonctionneront vraiment. Le processus est lent, incertain et épuisant.</p>
-      <p data-lang="en" style="display:none;">You spend hours brainstorming hooks without knowing if they'll actually work. The process is slow, uncertain and exhausting.</p>
-    </div>
-    
-    <div class="card">
-      <h3 data-lang="fr">🎲 Résultats aléatoires</h3>
-      <h3 data-lang="en" style="display:none;">🎲 Random results</h3>
-      <p data-lang="fr">Certaines vidéos explosent, d'autres font un flop. Impossible de reproduire le succès de manière consistante sans une méthode éprouvée.</p>
-      <p data-lang="en" style="display:none;">Some videos explode, others flop. Impossible to consistently reproduce success without a proven method.</p>
-    </div>
-  </div>
-</section>
-
-<section style="background: rgba(108, 92, 255, 0.03); padding: 80px 60px;">
-  <h2 style="text-align: center; font-size: 42px; margin-bottom: 20px;">
-    <span data-lang="fr">La solution ECIA</span>
-    <span data-lang="en" style="display:none;">The ECIA solution</span>
-  </h2>
-  
-  <div class="grid">
-    <div class="card">
-      <h3>⚡ IA optimisée</h3>
-      <p data-lang="fr">Notre algorithme analyse des millions de hooks viraux pour générer les accroches les plus performantes pour votre niche.</p>
-      <p data-lang="en" style="display:none;">Our algorithm analyzes millions of viral hooks to generate the highest performing openings for your niche.</p>
-    </div>
-    
-    <div class="card">
-      <h3>📊 Scoring intelligent</h3>
-      <p data-lang="fr">Chaque hook reçoit un score de clarté, curiosité et émotion. Vous savez exactement quel hook choisir pour maximiser vos chances.</p>
-      <p data-lang="en" style="display:none;">Each hook receives a clarity, curiosity and emotion score. You know exactly which hook to choose to maximize your chances.</p>
-    </div>
-    
-    <div class="card">
-      <h3>🚀 100% automatisé</h3>
-      <p data-lang="fr">Collez votre sujet, cliquez sur générer. En 5 secondes, vous avez 10 hooks prêts à l'emploi. Aucune compétence requise.</p>
-      <p data-lang="en" style="display:none;">Paste your topic, click generate. In 5 seconds, you have 10 ready-to-use hooks. No skills required.</p>
-    </div>
-  </div>
-</section>
-
-<section id="examples" class="examples">
-  <h2 style="text-align: center; font-size: 42px; margin-bottom: 60px;">
-    <span data-lang="fr">Exemples réels : Avant / Après ECIA</span>
-    <span data-lang="en" style="display:none;">Real examples: Before / After ECIA</span>
-  </h2>
-  
-  <div class="example-comparison">
-    <h4>📚 Niche : Formation en ligne</h4>
-    <p style="opacity: 0.8; margin-bottom: 20px;">Sujet : Comment créer sa première formation en ligne</p>
-    
-    <div class="hook-comparison">
-      <div class="hook-bad">
-        <div class="hook-label">❌ Hook classique (faible)</div>
-        <p>"Dans cette vidéo je vais vous expliquer comment créer votre première formation en ligne étape par étape..."</p>
-        <div style="margin-top: 12px; font-size: 14px; opacity: 0.7;">Rétention : 23% | Vues : 847</div>
+  <div class="container">
+    <h2>Why creators use ECIA</h2>
+    <p class="subtitle">Not another AI toy. A real content assistant.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Built for retention</h3>
+        <p>Scripts follow proven attention patterns optimized for the first 3 seconds.</p>
       </div>
-      
-      <div class="hook-good">
-        <div class="hook-label">✅ Hook ECIA <span class="score-badge">9.4/10</span></div>
-        <p>"J'ai généré 47k€ avec UNE formation en 6 mois. Voici la structure exacte que personne ne partage..."</p>
-        <div style="margin-top: 12px; font-size: 14px; opacity: 0.9; font-weight: 600;">Rétention : 78% | Vues : 124,000</div>
+      <div class="card">
+        <h3>No thinking required</h3>
+        <p>You read. You record. You post. No writing skills needed.</p>
       </div>
-    </div>
-  </div>
-  
-  <div class="example-comparison">
-    <h4>💪 Niche : Fitness / Sport</h4>
-    <p style="opacity: 0.8; margin-bottom: 20px;">Sujet : Programme prise de masse rapide</p>
-    
-    <div class="hook-comparison">
-      <div class="hook-bad">
-        <div class="hook-label">❌ Hook classique (faible)</div>
-        <p>"Salut tout le monde, aujourd'hui on va parler de prise de masse et je vais vous donner mes meilleurs conseils..."</p>
-        <div style="margin-top: 12px; font-size: 14px; opacity: 0.7;">Rétention : 19% | Vues : 1,230</div>
-      </div>
-      
-      <div class="hook-good">
-        <div class="hook-label">✅ Hook ECIA <span class="score-badge">9.1/10</span></div>
-        <p>"+12kg en 8 semaines sans compléments : le protocole que ma coach m'a fait SUPPRIMER 3 fois..."</p>
-        <div style="margin-top: 12px; font-size: 14px; opacity: 0.9; font-weight: 600;">Rétention : 81% | Vues : 387,000</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="example-comparison">
-    <h4>💼 Niche : Business / Entrepreneuriat</h4>
-    <p style="opacity: 0.8; margin-bottom: 20px;">Sujet : Lancer son e-commerce sans stock</p>
-    
-    <div class="hook-comparison">
-      <div class="hook-bad">
-        <div class="hook-label">❌ Hook classique (faible)</div>
-        <p>"Vous voulez lancer votre e-commerce ? Regardez cette vidéo jusqu'à la fin pour tout comprendre..."</p>
-        <div style="margin-top: 12px; font-size: 14px; opacity: 0.7;">Rétention : 16% | Vues : 592</div>
-      </div>
-      
-      <div class="hook-good">
-        <div class="hook-label">✅ Hook ECIA <span class="score-badge">9.7/10</span></div>
-        <p>"23 ans, 18k€/mois depuis mon appart. Et NON, ce n'est pas du dropshipping..."</p>
-        <div style="margin-top: 12px; font-size: 14px; opacity: 0.9; font-weight: 600;">Rétention : 85% | Vues : 562,000</div>
+      <div class="card">
+        <h3>Faster than ChatGPT</h3>
+        <p>No prompts. No tweaking. Just usable scripts.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="social-proof">
-  <h2 style="font-size: 42px; margin-bottom: 60px;">
-    <span data-lang="fr">Ce que disent nos créateurs</span>
-    <span data-lang="en" style="display:none;">What our creators say</span>
-  </h2>
-  
-  <div class="testimonial">
-    <p class="testimonial-text">"Mes vidéos stagnaient à 2-3k vues. Avec ECIA, ma dernière vidéo a fait 340k vues en 4 jours. Le hook change VRAIMENT tout."</p>
-    <p class="testimonial-author">— Marie L., Créatrice fitness • 127k abonnés</p>
-  </div>
-  
-  <div class="testimonial">
-    <p class="testimonial-text">"J'ai testé 5 outils d'IA pour mes hooks. ECIA est le seul qui génère des accroches qui fonctionnent vraiment. Le ROI est immédiat."</p>
-    <p class="testimonial-author">— Thomas D., Coach business • 89k abonnés</p>
-  </div>
-  
-  <div class="testimonial">
-    <p class="testimonial-text">"Je passais 2h à trouver le bon hook. Maintenant ça me prend 30 secondes. Je peux enfin me concentrer sur le montage et le contenu."</p>
-    <p class="testimonial-author">— Sarah K., Créatrice lifestyle • 214k abonnés</p>
-  </div>
-</section>
+<section id="pricing">
+  <div class="container">
+    <h2>Simple pricing</h2>
+    <p class="subtitle">Pay only for what you use.</p>
 
-<section style="text-align: center;">
-  <h2 style="font-size: 42px; margin-bottom: 20px;">
-    <span data-lang="fr">Comment ça marche ?</span>
-    <span data-lang="en" style="display:none;">How does it work?</span>
-  </h2>
-  <p style="font-size: 18px; opacity: 0.8; margin-bottom: 60px; max-width: 700px; margin-left: auto; margin-right: auto;">
-    <span data-lang="fr">Créer des hooks viraux n'a jamais été aussi simple</span>
-    <span data-lang="en" style="display:none;">Creating viral hooks has never been easier</span>
-  </p>
-  
-  <div class="grid">
-    <div class="card">
-      <div style="font-size: 48px; margin-bottom: 16px;">1️⃣</div>
-      <h3 data-lang="fr">Collez votre sujet</h3>
-      <h3 data-lang="en" style="display:none;">Paste your topic</h3>
-      <p data-lang="fr">Décrivez rapidement le thème de votre vidéo ou collez votre script. Même un simple mot-clé suffit.</p>
-      <p data-lang="en" style="display:none;">Quickly describe your video theme or paste your script. Even a simple keyword is enough.</p>
-    </div>
-    
-    <div class="card">
-      <div style="font-size: 48px; margin-bottom: 16px;">2️⃣</div>
-      <h3 data-lang="fr">L'IA génère</h3>
-      <h3 data-lang="en" style="display:none;">AI generates</h3>
-      <p data-lang="fr">En 5 secondes, ECIA analyse votre contenu et génère 10 hooks optimisés pour votre niche spécifique.</p>
-      <p data-lang="en" style="display:none;">In 5 seconds, ECIA analyzes your content and generates 10 hooks optimized for your specific niche.</p>
-    </div>
-    
-    <div class="card">
-      <div style="font-size: 48px; margin-bottom: 16px;">3️⃣</div>
-      <h3 data-lang="fr">Scores détaillés</h3>
-      <h3 data-lang="en" style="display:none;">Detailed scores</h3>
-      <p data-lang="fr">Chaque hook reçoit un score sur 3 critères : clarté, curiosité et émotion. Vous savez exactement lequel choisir.</p>
-      <p data-lang="en" style="display:none;">Each hook receives a score on 3 criteria: clarity, curiosity and emotion. You know exactly which one to choose.</p>
-    </div>
-    
-    <div class="card">
-      <div style="font-size: 48px; margin-bottom: 16px;">4️⃣</div>
-      <h3 data-lang="fr">Copiez et publiez</h3>
-      <h3 data-lang="en" style="display:none;">Copy and publish</h3>
-      <p data-lang="fr">Un clic pour copier le hook parfait. Collez-le dans votre vidéo et regardez votre rétention exploser.</p>
-      <p data-lang="en" style="display:none;">One click to copy the perfect hook. Paste it in your video and watch your retention explode.</p>
-    </div>
-  </div>
-</section>
+    <div class="pricing">
+      <div class="price-card">
+        <h3>Free</h3>
+        <div class="price">0€</div>
+        <ul>
+          <li>2 scripts / month</li>
+          <li>All formats</li>
+          <li>No credit card</li>
+        </ul>
+      </div>
 
-<section id="pricing" style="background: rgba(108, 92, 255, 0.03); padding: 100px 60px;">
-  <h2 style="text-align: center; font-size: 42px; margin-bottom: 20px;">
-    <span data-lang="fr">Tarifs simples et transparents</span>
-    <span data-lang="en" style="display:none;">Simple and transparent pricing</span>
-  </h2>
-  <p style="text-align: center; font-size: 18px; opacity: 0.8; margin-bottom: 60px;">
-    <span data-lang="fr">Commencez gratuitement. Évoluez quand vous êtes prêt.</span>
-    <span data-lang="en" style="display:none;">Start free. Scale when ready.</span>
-  </p>
-  
-  <div class="pricing-grid">
-    <div class="pricing-card">
-      <h3>Gratuit</h3>
-      <p style="opacity: 0.8; margin: 12px 0;">Pour tester ECIA</p>
-      <div class="price">0€</div>
-      <ul>
-        <li>5 hooks / mois</li>
-        <li>Tous les templates</li>
-        <li>Scores détaillés</li>
-        <li>Support communauté</li>
-      </ul>
-      <a class="btn btn-secondary" href="#demo" style="width: 100%; text-align: center; margin-top: 24px;">Commencer gratuitement</a>
-    </div>
-    
-    <div class="pricing-card popular">
-      <div class="popular-badge">🔥 POPULAIRE</div>
-      <h3>Pro</h3>
-      <p style="opacity: 0.8; margin: 12px 0;">Pour créateurs actifs</p>
-      <div class="price">19€<small>/mois</small></div>
-      <ul>
-        <li>100 hooks / mois</li>
-        <li>Templates avancés</li>
-        <li>Analyse concurrence</li>
-        <li>Historique illimité</li>
-        <li>Support prioritaire</li>
-        <li>Export CSV</li>
-      </ul>
-      <a class="btn" href="LIEN_STRIPE_PRO" style="width: 100%; text-align: center; margin-top: 24px;">Passer à Pro</a>
-      <div class="guarantee">✓ Garantie satisfait ou remboursé 30 jours</div>
-    </div>
-    
-    <div class="pricing-card">
-      <h3>Ultra</h3>
-      <p style="opacity: 0.8; margin: 12px 0;">Pour pros & agences</p>
-      <div class="price">39€<small>/mois</small></div>
-      <ul>
-        <li>Hooks illimités</li>
-        <li>API accès complet</li>
-        <li>Modèles personnalisés</li>
-        <li>Multi-comptes (5)</li>
-        <li>Support dédié 24/7</li>
-        <li>White label option</li>
-      </ul>
-      <a class="btn" href="LIEN_STRIPE_ULTRA" style="width: 100%; text-align: center; margin-top: 24px;">Passer à Ultra</a>
-      <div class="guarantee">✓ Garantie satisfait ou remboursé 30 jours</div>
-    </div>
-  </div>
-</section>
+      <div class="price-card">
+        <h3>Pro</h3>
+        <div class="price">19€</div>
+        <ul>
+          <li>60 scripts / month (~2/day)</li>
+          <li>Multiple styles</li>
+          <li>Priority access</li>
+        </ul>
+      </div>
 
-<section id="faq" class="faq-section">
-  <h2 style="text-align: center; font-size: 42px; margin-bottom: 60px;">
-    <span data-lang="fr">Questions fréquentes</span>
-    <span data-lang="en" style="display:none;">Frequently asked questions</span>
-  </h2>
-  
-  <div class="faq-item">
-    <h4 data-lang="fr">ECIA fonctionne-t-il pour toutes les niches ?</h4>
-    <h4 data-lang="en" style="display:none;">Does ECIA work for all niches?</h4>
-    <p data-lang="fr">Oui, absolument. Que vous soyez dans le fitness, le business, le lifestyle, l'éducation ou toute autre niche, ECIA adapte ses hooks à votre thématique spécifique. L'IA a été entraînée sur des millions de contenus viraux de toutes les catégories.</p>
-    <p data-lang="en" style="display:none;">Yes, absolutely. Whether you're in fitness, business, lifestyle, education or any other niche, ECIA adapts its hooks to your specific theme. The AI has been trained on millions of viral content from all categories.</p>
+      <div class="price-card">
+        <h3>Ultra</h3>
+        <div class="price">39€</div>
+        <ul>
+          <li>150 scripts / month (~5/day)</li>
+          <li>Advanced structuring</li>
+          <li>Best performance models</li>
+        </ul>
+      </div>
+    </div>
   </div>
-  
-  <div class="faq-item">
-    <h4 data-lang="fr">Puis-je annuler mon abonnement à tout moment ?</h4>
-    <h4 data-lang="en" style="display:none;">Can I cancel my subscription anytime?</h4>
-    <p data-lang="fr">Oui, vous pouvez annuler en un clic depuis votre compte. Aucun engagement, aucune période minimale. Si vous annulez, vous gardez l'accès jusqu'à la fin de votre période payée. Et nous offrons une garantie satisfait ou remboursé de 30 jours.</p>
-    <p data-lang="en" style="display:none;">Yes, you can cancel with one click from your account. No commitment, no minimum period. If you cancel, you keep access until the end of your paid period. And we offer a 30-day money-back guarantee.</p>
-  </div>
-  
-  <div class="faq-item">
-    <h4 data-lang="fr">Est-ce adapté aux débutants qui démarrent ?</h4>
-    <h4 data-lang="en" style="display:none;">Is it suitable for beginners just starting?</h4>
-    <p data-lang="fr">Absolument ! ECIA est conçu pour être ultra-simple. Pas besoin de connaissances en marketing, copywriting ou IA. Vous collez votre idée, l'outil fait le reste. Même un enfant de 10 ans pourrait l'utiliser. De nombreux débutants obtiennent de meilleurs hooks que des créateurs expérimentés grâce à ECIA.</p>
-    <p data-lang="en" style="display:none;">Absolutely! ECIA is designed to be ultra-simple. No need for marketing, copywriting or AI knowledge. You paste your idea, the tool does the rest. Even a 10-year-old could use it. Many beginners get better hooks than experienced creators thanks to ECIA.</p>
-  </div>
-  
-  <div class="faq-item">
-    <h4 data-lang="fr">Comment ECIA compare aux autres outils d'IA ?</h4>
-    <h4 data-lang="en" style="display:none;">How does ECIA compare to other AI tools?</h4>
-    <p data-lang="fr">Contrairement à ChatGPT ou d'autres IA génériques, ECIA est spécialisé uniquement dans les hooks viraux. Nous avons entraîné notre modèle sur des millions de vidéos performantes pour maximiser la rétention. Le système de scoring (clarté/curiosité/émotion) est unique et vous aide à choisir LE meilleur hook à chaque fois.</p>
-    <p data-lang="en" style="display:none;">Unlike ChatGPT or other generic AIs, ECIA specializes only in viral hooks. We trained our model on millions of high-performing videos to maximize retention. The scoring system (clarity/curiosity/emotion) is unique and helps you choose THE best hook every time.</p>
-  </div>
-  
-  <div class="faq-item">
-    <h4 data-lang="fr">Les hooks générés sont-ils vraiment uniques ?</h4>
-    <h4 data-lang="en" style="display:none;">Are the generated hooks truly unique?</h4>
-    <p data-lang="fr">Oui, chaque hook est généré de manière unique pour votre contenu. L'IA ne copie jamais textuellement des hooks existants. Elle comprend les patterns qui fonctionnent et crée des variations originales adaptées à votre sujet précis. Vous ne verrez jamais deux fois le même hook.</p>
-    <p data-lang="en" style="display:none;">Yes, each hook is uniquely generated for your content. The AI never literally copies existing hooks. It understands the patterns that work and creates original variations adapted to your specific topic. You'll never see the same hook twice.</p>
-  </div>
-  
-  <div class="faq-item">
-    <h4 data-lang="fr">Que se passe-t-il si je dépasse mon quota ?</h4>
-    <h4 data-lang="en" style="display:none;">What happens if I exceed my quota?</h4>
-    <p data-lang="fr">Avec le plan Gratuit (5 hooks/mois), vous serez simplement notifié que vous avez atteint la limite et invité à passer au plan Pro. Avec le plan Pro (100 hooks/mois), vous recevrez une alerte à 80% et pourrez upgrader vers Ultra pour des hooks illimités. Aucun surcoût surprise.</p>
-    <p data-lang="en" style="display:none;">With the Free plan (5 hooks/month), you'll simply be notified that you've reached the limit and invited to upgrade to Pro. With the Pro plan (100 hooks/month), you'll receive an alert at 80% and can upgrade to Ultra for unlimited hooks. No surprise charges.</p>
-  </div>
-</section>
-
-<section style="text-align: center; background: linear-gradient(135deg, #6c5cff 0%, #7c6cff 100%); padding: 80px 60px; border-radius: 20px; margin: 60px;">
-  <h2 style="font-size: 48px; margin-bottom: 24px;">
-    <span data-lang="fr">Prêt à créer des hooks qui arrêtent le scroll ?</span>
-    <span data-lang="en" style="display:none;">Ready to create hooks that stop the scroll?</span>
-  </h2>
-  <p style="font-size: 20px; opacity: 0.95; margin-bottom: 40px;">
-    <span data-lang="fr">Rejoignez 2,847 créateurs qui boostent leur rétention avec ECIA</span>
-    <span data-lang="en" style="display:none;">Join 2,847 creators boosting their retention with ECIA</span>
-  </p>
-  <a class="btn" href="#demo" style="background: white; color: #6c5cff; font-size: 18px; padding: 16px 40px;">
-    <span data-lang="fr">Commencer gratuitement →</span>
-    <span data-lang="en" style="display:none;">Start for free →</span>
-  </a>
-  <p style="margin-top: 20px; font-size: 14px; opacity: 0.9;">
-    <span data-lang="fr">✓ Aucune carte bancaire requise • ✓ 5 hooks gratuits • ✓ Résultats en 30 secondes</span>
-    <span data-lang="en" style="display:none;">✓ No credit card required • ✓ 5 free hooks • ✓ Results in 30 seconds</span>
-  </p>
 </section>
 
 <footer>
-  <div class="footer-content">
-    <div class="footer-section">
-      <h4>ECIA</h4>
-      <p style="opacity: 0.7; margin-top: 12px;">L'intelligence artificielle qui transforme vos idées en hooks viraux. Créez du contenu qui captive, retient et convertit.</p>
-    </div>
-    
-    <div class="footer-section">
-      <h4 data-lang="fr">Produit</h4>
-      <h4 data-lang="en" style="display:none;">Product</h4>
-      <a href="#demo" data-lang="fr">Démo</a>
-      <a href="#demo" data-lang="en" style="display:none;">Demo</a>
-      <a href="#examples" data-lang="fr">Exemples</a>
-      <a href="#examples" data-lang="en" style="display:none;">Examples</a>
-      <a href="#pricing" data-lang="fr">Tarifs</a>
-      <a href="#pricing" data-lang="en" style="display:none;">Pricing</a>
-      <a href="#faq">FAQ</a>
-    </div>
-    
-    <div class="footer-section">
-      <h4 data-lang="fr">Légal</h4>
-      <h4 data-lang="en" style="display:none;">Legal</h4>
-      <a href="#" data-lang="fr">CGV</a>
-      <a href="#" data-lang="en" style="display:none;">Terms</a>
-      <a href="#" data-lang="fr">Confidentialité</a>
-      <a href="#" data-lang="en" style="display:none;">Privacy</a>
-      <a href="#" data-lang="fr">Mentions légales</a>
-      <a href="#" data-lang="en" style="display:none;">Legal notice</a>
-    </div>
-  </div>
-  
-  <div class="footer-bottom">
-    <p>© 2025 ECIA — Tous droits réservés</p>
-    <p style="margin-top: 8px;">Contact : contact@ecia.io</p>
-  </div>
+  © 2025 ECIA — contact@ecia.io
 </footer>
-
-<script>
-function toggleLang(lang) {
-  document.querySelectorAll('[data-lang]').forEach(el => {
-    el.style.display = el.dataset.lang === lang ? '' : 'none';
-  });
-}
-
-function generateHooks() {
-  const input = document.getElementById('demoInput').value;
-  const result = document.getElementById('demoResult');
-  
-  if (input.trim().length < 10) {
-    alert('Veuillez entrer au moins quelques mots pour générer des hooks !');
-    return;
-  }
-  
-  // Animation simple
-  result.style.display = 'block';
-  result.style.opacity = '0';
-  setTimeout(() => {
-    result.style.transition = 'opacity 0.5s';
-    result.style.opacity = '1';
-  }, 100);
-}
-
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-</script>
 
 </body>
 </html>
