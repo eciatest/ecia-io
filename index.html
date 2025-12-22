@@ -68,10 +68,27 @@
         .logo {
             font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-primary);
+        }
+
+        .lang-text {
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .lang-link {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .lang-link:hover {
+            color: var(--accent-blue-light);
+        }
+
+        .lang-link.active {
+            color: var(--accent-blue-light);
+            font-weight: 600;
         }
 
         nav {
@@ -91,35 +108,6 @@
             color: var(--accent-blue-light);
         }
 
-        .lang-toggle {
-            display: flex;
-            gap: 8px;
-            background: var(--bg-card);
-            padding: 6px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-
-        .lang-btn {
-            padding: 6px 14px;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .lang-btn.active {
-            background: var(--accent-blue);
-            color: white;
-        }
-
-        .lang-btn:hover:not(.active) {
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--text-primary);
-        }
 
         /* Buttons */
         .btn {
@@ -541,6 +529,10 @@
                 font-size: 24px;
             }
 
+            .lang-text {
+                font-size: 14px;
+            }
+
             nav {
                 display: none;
             }
@@ -805,15 +797,6 @@
                 padding: 12px 26px;
             }
 
-            /* Lang Toggle Mobile */
-            .lang-toggle {
-                padding: 4px;
-            }
-
-            .lang-btn {
-                padding: 6px 12px;
-                font-size: 13px;
-            }
         }
 
         /* Small Mobile (< 400px) */
@@ -892,17 +875,18 @@
 <header>
     <div class="container">
         <div class="header-content">
-            <div class="logo">ECIA</div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="logo">ECIA</div>
+                <div class="lang-text">
+                    <span class="lang-link" onclick="switchLang('fr')">FR</span> <span style="margin: 0 4px;">|</span> <span class="lang-link" onclick="switchLang('en')">EN</span>
+                </div>
+            </div>
             
             <!-- Desktop Navigation -->
             <nav>
                 <a href="#demo" data-i18n="nav-demo">Demo</a>
                 <a href="#pricing" data-i18n="nav-pricing">Pricing</a>
                 <a href="#faq" data-i18n="nav-faq">FAQ</a>
-                <div class="lang-toggle">
-                    <button class="lang-btn active" onclick="switchLang('fr')">FR</button>
-                    <button class="lang-btn" onclick="switchLang('en')">EN</button>
-                </div>
                 <a href="#pricing" class="btn" data-i18n="nav-cta">Start Free</a>
             </nav>
 
@@ -917,9 +901,8 @@
             <a href="#demo" data-i18n="nav-demo" onclick="closeMobileMenu()">Demo</a>
             <a href="#pricing" data-i18n="nav-pricing" onclick="closeMobileMenu()">Pricing</a>
             <a href="#faq" data-i18n="nav-faq" onclick="closeMobileMenu()">FAQ</a>
-            <div class="lang-toggle">
-                <button class="lang-btn active" onclick="switchLang('fr')">FR</button>
-                <button class="lang-btn" onclick="switchLang('en')">EN</button>
+            <div class="lang-text" style="padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                <span class="lang-link" onclick="switchLang('fr'); closeMobileMenu();">FR</span> <span style="margin: 0 4px;">|</span> <span class="lang-link" onclick="switchLang('en'); closeMobileMenu();">EN</span>
             </div>
             <a href="#pricing" class="btn" data-i18n="nav-cta" onclick="closeMobileMenu()">Start Free</a>
         </div>
@@ -1397,11 +1380,11 @@
     function switchLang(lang) {
         currentLang = lang;
         
-        // Update button states in both desktop and mobile nav
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.textContent === lang.toUpperCase()) {
-                btn.classList.add('active');
+        // Update lang link states
+        document.querySelectorAll('.lang-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.textContent.trim() === lang.toUpperCase()) {
+                link.classList.add('active');
             }
         });
         
