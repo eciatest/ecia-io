@@ -645,6 +645,10 @@
                 gap: 12px;
             }
 
+            .header-right .btn {
+                display: none;
+            }
+
             .logo {
                 font-size: 24px;
             }
@@ -1689,8 +1693,19 @@
             }
             
             // Update href for links with data-i18n-href attributes
-            if (element.tagName === 'A' && element.hasAttribute('data-i18n-href-' + lang)) {
-                element.href = element.getAttribute('data-i18n-href-' + lang);
+            if (element.tagName === 'A') {
+                const hrefAttr = 'data-i18n-href-' + lang;
+                if (element.hasAttribute(hrefAttr)) {
+                    element.href = element.getAttribute(hrefAttr);
+                }
+            }
+        });
+        
+        // Also update links with data-i18n-href attributes that don't have data-i18n
+        document.querySelectorAll('a[data-i18n-href-fr], a[data-i18n-href-en]').forEach(link => {
+            const hrefAttr = 'data-i18n-href-' + lang;
+            if (link.hasAttribute(hrefAttr)) {
+                link.href = link.getAttribute(hrefAttr);
             }
         });
     }
