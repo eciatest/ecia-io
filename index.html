@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ECIA - Générateur de scripts IA pour TikTok, Reels et Shorts. Créez des vidéos virales en 30 secondes.">
     <title>ECIA - AI Script Generator for Viral Videos</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <style>
         * {
             margin: 0;
@@ -1103,6 +1104,203 @@
                 width: 100%;
             }
         }
+
+        /* Auth Modal */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-modal.show {
+            display: flex;
+        }
+
+        .auth-modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+        }
+
+        .auth-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .auth-modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .auth-modal h2 {
+            font-size: 28px;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .auth-form-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .auth-form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .auth-form-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .auth-form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .auth-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .auth-message.show {
+            display: block;
+        }
+
+        .auth-message.success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+
+        .auth-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-user-info {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .auth-user-info.show {
+            display: flex;
+        }
+
+        .auth-user-email {
+            color: var(--text-primary);
+        }
+
+        .auth-user-plan {
+            padding: 4px 12px;
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid var(--accent-blue);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-blue-light);
+        }
+
+        .auth-logout-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-logout-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue-light);
+        }
+
+        @media (max-width: 768px) {
+            .auth-modal-content {
+                padding: 32px 24px;
+            }
+
+            .auth-modal h2 {
+                font-size: 24px;
+            }
+
+            .auth-user-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1120,13 +1318,19 @@
             
             <!-- Desktop Navigation -->
             <nav class="header-center">
-                <a href="#demo" data-i18n="nav-demo">Demo</a>
-                <a href="#pricing" data-i18n="nav-pricing">Pricing</a>
+                <a href="#demo" data-i18n="nav-demo">Démo</a>
+                <a href="#pricing" data-i18n="nav-pricing">Tarifs</a>
                 <a href="#faq" data-i18n="nav-faq">FAQ</a>
             </nav>
 
             <div class="header-right">
-                <a href="#pricing" class="btn" data-i18n="nav-cta">Start Free</a>
+                <div class="auth-user-info" id="authUserInfo">
+                    <span class="auth-user-email" id="authUserEmail"></span>
+                    <span class="auth-user-plan" id="authUserPlan"></span>
+                    <button class="auth-logout-btn" onclick="handleLogout()" data-i18n="auth-logout">Se déconnecter</button>
+                </div>
+                <button class="btn" id="authLoginBtn" onclick="openAuthModal()" data-i18n="auth-login" style="display: none;">Se connecter</button>
+                <a href="#pricing" class="btn" id="headerCtaBtn" data-i18n="nav-cta">Commencer gratuitement</a>
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
                     <span id="menuIcon">☰</span>
                 </button>
@@ -1135,13 +1339,13 @@
 
         <!-- Mobile Navigation -->
         <div class="mobile-nav" id="mobileNav">
-            <a href="#demo" data-i18n="nav-demo" onclick="closeMobileMenu()">Demo</a>
-            <a href="#pricing" data-i18n="nav-pricing" onclick="closeMobileMenu()">Pricing</a>
+            <a href="#demo" data-i18n="nav-demo" onclick="closeMobileMenu()">Démo</a>
+            <a href="#pricing" data-i18n="nav-pricing" onclick="closeMobileMenu()">Tarifs</a>
             <a href="#faq" data-i18n="nav-faq" onclick="closeMobileMenu()">FAQ</a>
             <div class="lang-text" style="padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
                 <span class="lang-link" onclick="switchLang('fr'); closeMobileMenu();">FR</span> <span style="margin: 0 4px;">|</span> <span class="lang-link" onclick="switchLang('en'); closeMobileMenu();">EN</span>
             </div>
-            <a href="#pricing" class="btn" data-i18n="nav-cta" onclick="closeMobileMenu()">Start Free</a>
+            <a href="#pricing" class="btn" data-i18n="nav-cta" onclick="closeMobileMenu()">Commencer gratuitement</a>
         </div>
     </div>
 </header>
@@ -1149,12 +1353,12 @@
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
-        <h1 data-i18n="hero-title">Create viral scripts in 30 seconds with AI</h1>
-        <p data-i18n="hero-subtitle">ECIA generates complete, ready-to-shoot scripts for TikTok, Reels and Shorts. Stop wasting hours writing. Start creating content that converts.</p>
+        <h1 data-i18n="hero-title">Créez des scripts vidéos qui cartonnent en 30 secondes grâce à l'IA</h1>
+        <p data-i18n="hero-subtitle">ECIA génère des scripts complets pour TikTok, Reels et Shorts. Commencez à créer du contenu qui convertit.</p>
         
         <div class="hero-buttons">
-            <a href="#demo" class="btn" data-i18n="hero-cta-primary">Try ECIA Free</a>
-            <a href="#pricing" class="btn btn-secondary" data-i18n="hero-cta-secondary">See Pricing</a>
+            <a href="#demo" class="btn" data-i18n="hero-cta-primary">Essayer ECIA gratuitement</a>
+            <a href="#pricing" class="btn btn-secondary" data-i18n="hero-cta-secondary">Voir les tarifs</a>
         </div>
     </div>
 </section>
@@ -1199,22 +1403,22 @@
 <!-- Problem Section -->
 <section class="section">
     <div class="container">
-        <h2 class="section-title" data-i18n="problem-title">The problem you're facing</h2>
+        <h2 class="section-title" data-i18n="problem-title">Le problème que vous rencontrez</h2>
         <div class="grid">
             <div class="card">
                 <div class="card-icon">📉</div>
-                <h3 data-i18n="problem-1-title">90% failure rate</h3>
-                <p data-i18n="problem-1-desc">Most videos fail because the hook doesn't grab attention in the first 3 seconds. You lose your audience before they even discover your content.</p>
+                <h3 data-i18n="problem-1-title">90% d'échec</h3>
+                <p data-i18n="problem-1-desc">La majorité des vidéos échouent car le hook n'accroche pas dans les 3 premières secondes. Vous perdez votre audience avant même qu'elle ne découvre votre contenu.</p>
             </div>
             <div class="card">
                 <div class="card-icon">⏰</div>
-                <h3 data-i18n="problem-2-title">Wasted time</h3>
-                <p data-i18n="problem-2-desc">You spend hours brainstorming scripts without knowing if they'll actually work. The process is slow, uncertain and exhausting.</p>
+                <h3 data-i18n="problem-2-title">Temps perdu</h3>
+                <p data-i18n="problem-2-desc">Vous passez des heures à brainstormer des scripts, sans savoir s'ils fonctionneront vraiment. Le processus est lent, incertain et épuisant.</p>
             </div>
             <div class="card">
                 <div class="card-icon">🎲</div>
-                <h3 data-i18n="problem-3-title">Random results</h3>
-                <p data-i18n="problem-3-desc">Some videos explode, others flop. Impossible to consistently reproduce success without a proven method.</p>
+                <h3 data-i18n="problem-3-title">Résultats aléatoires</h3>
+                <p data-i18n="problem-3-desc">Certaines vidéos explosent, d'autres font un flop. Impossible de reproduire le succès de manière consistante sans une méthode éprouvée.</p>
             </div>
         </div>
     </div>
@@ -1223,22 +1427,22 @@
 <!-- Solution Section -->
 <section class="section">
     <div class="container">
-        <h2 class="section-title" data-i18n="solution-title">The ECIA solution</h2>
+        <h2 class="section-title" data-i18n="solution-title">La solution ECIA</h2>
         <div class="grid">
             <div class="card">
                 <div class="card-icon">⚡</div>
-                <h3 data-i18n="solution-1-title">Optimized AI</h3>
-                <p data-i18n="solution-1-desc">Our algorithm analyzes millions of viral scripts to generate the highest performing hooks for your niche.</p>
+                <h3 data-i18n="solution-1-title">IA optimisée</h3>
+                <p data-i18n="solution-1-desc">Notre algorithme analyse des millions de scripts viraux pour générer les accroches les plus performantes pour votre niche.</p>
             </div>
             <div class="card">
                 <div class="card-icon">📊</div>
-                <h3 data-i18n="solution-2-title">Smart scoring</h3>
-                <p data-i18n="solution-2-desc">Each script receives a clarity, curiosity and emotion score. You know exactly which one to choose to maximize your chances.</p>
+                <h3 data-i18n="solution-2-title">Scoring intelligent</h3>
+                <p data-i18n="solution-2-desc">Chaque script reçoit un score de clarté, curiosité et émotion. Vous savez exactement lequel choisir pour maximiser vos chances.</p>
             </div>
             <div class="card">
                 <div class="card-icon">🚀</div>
-                <h3 data-i18n="solution-3-title">100% automated</h3>
-                <p data-i18n="solution-3-desc">Paste your topic, click generate. In 30 seconds, you have 10 ready-to-shoot scripts. No skills required.</p>
+                <h3 data-i18n="solution-3-title">100% automatisé</h3>
+                <p data-i18n="solution-3-desc">Collez votre sujet, cliquez sur générer. En 30 secondes, vous avez 10 scripts. Aucune compétence requise.</p>
             </div>
         </div>
     </div>
@@ -1247,52 +1451,52 @@
 <!-- Pricing Section -->
 <section class="section" id="pricing">
     <div class="container">
-        <h2 class="section-title" data-i18n="pricing-title">Simple and transparent pricing</h2>
-        <p class="section-subtitle" data-i18n="pricing-subtitle">Start free. Scale when ready.</p>
+        <h2 class="section-title" data-i18n="pricing-title">Choisissez votre pack</h2>
+        <p class="section-subtitle" data-i18n="pricing-subtitle">Commencez gratuitement. Évoluez quand vous êtes prêt.</p>
         
         <div class="pricing-grid">
             <!-- Free Plan -->
             <div class="pricing-card">
-                <h3 data-i18n="plan-free-name">Free</h3>
-                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-free-desc">To test ECIA</p>
+                <h3 data-i18n="plan-free-name">Gratuit</h3>
+                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-free-desc">Pour tester ECIA</p>
                 <div class="price">0€</div>
                 <ul>
-                    <li data-i18n="plan-free-feat-1">2 scripts / month</li>
-                    <li data-i18n="plan-free-feat-2">All formats</li>
-                    <li data-i18n="plan-free-feat-3">Community support</li>
+                    <li data-i18n="plan-free-feat-1">2 scripts / mois</li>
+                    <li data-i18n="plan-free-feat-2">Tous les formats</li>
+                    <li data-i18n="plan-free-feat-3">Support communauté</li>
                 </ul>
-                <a href="#demo" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-free-cta">Start Free</a>
+                <a href="#demo" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-free-cta">Commencer gratuitement</a>
             </div>
 
             <!-- Pro Plan -->
             <div class="pricing-card popular">
-                <div class="popular-badge" data-i18n="plan-popular-badge">🔥 POPULAR</div>
+                <div class="popular-badge" data-i18n="plan-popular-badge">🔥 LE PLUS POPULAIRE</div>
                 <h3 data-i18n="plan-pro-name">Pro</h3>
-                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-pro-desc">For active creators</p>
-                <div class="price">19€<small data-i18n="plan-price-month">/month</small></div>
+                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-pro-desc">Pour créateurs actifs</p>
+                <div class="price">19€<small data-i18n="plan-price-month">/mois</small></div>
                 <ul>
-                    <li data-i18n="plan-pro-feat-1">40 scripts / month</li>
-                    <li data-i18n="plan-pro-feat-2">3 tone styles</li>
-                    <li data-i18n="plan-pro-feat-3">Unlimited history</li>
-                    <li data-i18n="plan-pro-feat-4">PDF export</li>
-                    <li data-i18n="plan-pro-feat-5">Priority support</li>
+                    <li data-i18n="plan-pro-feat-1">40 scripts / mois</li>
+                    <li data-i18n="plan-pro-feat-2">3 styles de ton</li>
+                    <li data-i18n="plan-pro-feat-3">Historique illimité</li>
+                    <li data-i18n="plan-pro-feat-4">Export PDF</li>
+                    <li data-i18n="plan-pro-feat-5">Support prioritaire</li>
                 </ul>
-                <a href="#" class="btn" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-pro-cta">Get Pro</a>
+                <a href="#" class="btn" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-pro-cta">Passer à Pro</a>
             </div>
 
             <!-- Ultra Plan -->
             <div class="pricing-card">
                 <h3 data-i18n="plan-ultra-name">Ultra</h3>
-                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-ultra-desc">For pros & agencies</p>
-                <div class="price">39€<small data-i18n="plan-price-month">/month</small></div>
+                <p style="color: var(--text-muted); margin: 12px 0;" data-i18n="plan-ultra-desc">Pour pros & agences</p>
+                <div class="price">39€<small data-i18n="plan-price-month">/mois</small></div>
                 <ul>
-                    <li data-i18n="plan-ultra-feat-1">100 scripts / month</li>
-                    <li data-i18n="plan-ultra-feat-2">5 tone styles</li>
-                    <li data-i18n="plan-ultra-feat-3">Competitor analysis</li>
-                    <li data-i18n="plan-ultra-feat-4">Custom scripts</li>
-                    <li data-i18n="plan-ultra-feat-5">Ultra-priority support</li>
+                    <li data-i18n="plan-ultra-feat-1">100 scripts / mois</li>
+                    <li data-i18n="plan-ultra-feat-2">5 styles de ton</li>
+                    <li data-i18n="plan-ultra-feat-3">Analyse concurrence</li>
+                    <li data-i18n="plan-ultra-feat-4">Scripts personnalisés</li>
+                    <li data-i18n="plan-ultra-feat-5">Support ultra-prioritaire</li>
                 </ul>
-                <a href="#" class="btn" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-ultra-cta">Get Ultra</a>
+                <a href="#" class="btn" style="width: 100%; text-align: center; margin-top: 24px;" data-i18n="plan-ultra-cta">Passer à Ultra</a>
             </div>
         </div>
     </div>
@@ -1301,45 +1505,45 @@
 <!-- FAQ Section -->
 <section class="section" id="faq">
     <div class="container" style="max-width: 900px;">
-        <h2 class="section-title" data-i18n="faq-title">Frequently Asked Questions</h2>
+        <h2 class="section-title" data-i18n="faq-title">Questions fréquentes</h2>
         
         <div class="faq-item" onclick="toggleFaq(this)">
             <div class="faq-question">
-                <h4 data-i18n="faq-1-q">Does ECIA work for all niches?</h4>
+                <h4 data-i18n="faq-1-q">ECIA fonctionne-t-il pour toutes les niches ?</h4>
                 <span class="faq-icon">▼</span>
             </div>
             <div class="faq-answer">
-                <p data-i18n="faq-1-a">Yes, absolutely. Whether you're in fitness, business, lifestyle, education or any other niche, ECIA adapts its scripts to your specific theme. The AI has been trained on millions of viral content from all categories.</p>
+                <p data-i18n="faq-1-a">Oui, absolument. Que vous soyez dans le fitness, le business, le lifestyle, l'éducation ou toute autre niche, ECIA adapte ses scripts à votre thématique spécifique. L'IA a été entraînée sur des millions de contenus viraux de toutes les catégories.</p>
             </div>
         </div>
 
         <div class="faq-item" onclick="toggleFaq(this)">
             <div class="faq-question">
-                <h4 data-i18n="faq-2-q">Can I cancel my subscription anytime?</h4>
+                <h4 data-i18n="faq-2-q">Puis-je annuler mon abonnement à tout moment ?</h4>
                 <span class="faq-icon">▼</span>
             </div>
             <div class="faq-answer">
-                <p data-i18n="faq-2-a">Yes, you can cancel with one click from your account. No commitment, no minimum period. If you cancel, you keep access until the end of your paid period. And we offer a 30-day money-back guarantee.</p>
+                <p data-i18n="faq-2-a">Oui, vous pouvez annuler en un clic depuis votre compte. Aucun engagement, aucune période minimale. Si vous annulez, vous gardez l'accès jusqu'à la fin de votre période payée. Et nous offrons une garantie satisfait ou remboursé de 30 jours.</p>
             </div>
         </div>
 
         <div class="faq-item" onclick="toggleFaq(this)">
             <div class="faq-question">
-                <h4 data-i18n="faq-3-q">Is it suitable for beginners?</h4>
+                <h4 data-i18n="faq-3-q">Est-ce adapté aux débutants ?</h4>
                 <span class="faq-icon">▼</span>
             </div>
             <div class="faq-answer">
-                <p data-i18n="faq-3-a">Absolutely! ECIA is designed to be ultra-simple. No marketing, copywriting or AI knowledge needed. You paste your idea, the tool does the rest. Many beginners get better scripts than experienced creators thanks to ECIA.</p>
+                <p data-i18n="faq-3-a">Absolument ! ECIA est conçu pour être ultra-simple. Pas besoin de connaissances en marketing, copywriting ou IA. Vous collez votre idée, l'outil fait le reste. De nombreux débutants obtiennent de meilleurs scripts que des créateurs expérimentés grâce à ECIA.</p>
             </div>
         </div>
 
         <div class="faq-item" onclick="toggleFaq(this)">
             <div class="faq-question">
-                <h4 data-i18n="faq-4-q">Are the generated scripts truly unique?</h4>
+                <h4 data-i18n="faq-4-q">Les scripts générés sont-ils vraiment uniques ?</h4>
                 <span class="faq-icon">▼</span>
             </div>
             <div class="faq-answer">
-                <p data-i18n="faq-4-a">Yes, each script is uniquely generated for your content. The AI never literally copies existing scripts. It understands the patterns that work and creates original variations adapted to your specific topic.</p>
+                <p data-i18n="faq-4-a">Oui, chaque script est généré de manière unique pour votre contenu. L'IA ne copie jamais textuellement des scripts existants. Elle comprend les patterns qui fonctionnent et crée des variations originales adaptées à votre sujet précis.</p>
             </div>
         </div>
     </div>
@@ -1349,10 +1553,10 @@
 <section class="section">
     <div class="container">
         <div class="cta-section">
-            <h2 data-i18n="cta-title">Ready to create scripts that stop the scroll?</h2>
-            <p data-i18n="cta-subtitle">Join 2,847 creators boosting their retention with ECIA</p>
-            <a href="#demo" class="btn" data-i18n="cta-button">Start Free →</a>
-            <p class="cta-features" data-i18n="cta-features">✓ No credit card required • ✓ 2 free scripts • ✓ Results in 30 seconds</p>
+            <h2 data-i18n="cta-title">Prêt à créer des scripts qui arrêtent le scroll ?</h2>
+            <p data-i18n="cta-subtitle">Rejoignez 2,847 créateurs qui boostent leur rétention avec ECIA</p>
+            <a href="#demo" class="btn" data-i18n="cta-button">Commencer gratuitement →</a>
+            <p class="cta-features" data-i18n="cta-features">✓ Aucune carte bancaire requise • ✓ 2 scripts gratuits • ✓ Résultats en 30 secondes</p>
         </div>
     </div>
 </section>
@@ -1363,34 +1567,34 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4>ECIA</h4>
-                <p data-i18n="footer-desc">The AI that transforms your ideas into viral scripts. Create content that captivates, retains and converts.</p>
+                <p data-i18n="footer-desc">L'IA qui transforme vos idées en scripts viraux. Créez du contenu qui captive, retient et convertit.</p>
             </div>
             
             <div class="footer-section">
-                <h4 data-i18n="footer-product-title">Product</h4>
-                <a href="#demo" data-i18n="footer-demo">Demo</a>
-                <a href="#pricing" data-i18n="footer-pricing">Pricing</a>
+                <h4 data-i18n="footer-product-title">Produit</h4>
+                <a href="#demo" data-i18n="footer-demo">Démo</a>
+                <a href="#pricing" data-i18n="footer-pricing">Tarifs</a>
                 <a href="#faq" data-i18n="footer-faq">FAQ</a>
             </div>
             
             <div class="footer-section">
-                <h4 data-i18n="footer-legal-title">Legal</h4>
-                <a href="cgv.html" data-i18n="footer-terms" data-i18n-href-fr="cgv.html" data-i18n-href-en="terms.html">Terms</a>
+                <h4 data-i18n="footer-legal-title">Légal</h4>
+                <a href="cgv.html" data-i18n="footer-terms" data-i18n-href-fr="cgv.html" data-i18n-href-en="terms.html">CGV</a>
                 <a href="cgu.html" data-i18n="footer-cgu" data-i18n-href-fr="cgu.html" data-i18n-href-en="terms-of-use.html">CGU</a>
-                <a href="politique-confidentialite.html" data-i18n="footer-privacy" data-i18n-href-fr="politique-confidentialite.html" data-i18n-href-en="privacy-policy.html">Privacy</a>
-                <a href="mentions-legales.html" data-i18n="footer-legal" data-i18n-href-fr="mentions-legales.html" data-i18n-href-en="legal-notice.html">Legal Notice</a>
+                <a href="politique-confidentialite.html" data-i18n="footer-privacy" data-i18n-href-fr="politique-confidentialite.html" data-i18n-href-en="privacy-policy.html">Politique de confidentialité</a>
+                <a href="mentions-legales.html" data-i18n="footer-legal" data-i18n-href-fr="mentions-legales.html" data-i18n-href-en="legal-notice.html">Mentions légales</a>
             </div>
         </div>
         
         <div class="footer-bottom">
-            <p>© 2026 ECIA — <span data-i18n="footer-rights">All rights reserved</span></p>
+            <p>© 2026 ECIA — <span data-i18n="footer-rights">Tous droits réservés</span></p>
             <p style="margin-top: 8px;">contact@ecia.io</p>
         </div>
     </div>
 </footer>
 
-<script>
-    // Translations
+    <script>
+    // Translations - MUST be defined first
     const translations = {
         fr: {
             // Navigation
@@ -1507,7 +1711,16 @@
             'cookie-text': 'Nous utilisons des cookies pour améliorer votre expérience, analyser le trafic et personnaliser le contenu. En continuant, vous acceptez notre utilisation des cookies.',
             'cookie-learn-more': 'En savoir plus',
             'cookie-accept': 'Accepter',
-            'cookie-refuse': 'Refuser'
+            'cookie-refuse': 'Refuser',
+            
+            // Auth
+            'auth-login': 'Se connecter',
+            'auth-logout': 'Se déconnecter',
+            'auth-title': 'Se connecter',
+            'auth-email-label': 'Email',
+            'auth-submit': 'Se connecter',
+            'auth-success': 'Lien envoyé, vérifiez votre email',
+            'auth-error': 'Une erreur est survenue. Veuillez réessayer.'
         },
         en: {
             // Navigation
@@ -1624,7 +1837,16 @@
             'cookie-text': 'We use cookies to improve your experience, analyze traffic and personalize content. By continuing, you accept our use of cookies.',
             'cookie-learn-more': 'Learn more',
             'cookie-accept': 'Accept',
-            'cookie-refuse': 'Refuse'
+            'cookie-refuse': 'Refuse',
+            
+            // Auth
+            'auth-login': 'Sign in',
+            'auth-logout': 'Sign out',
+            'auth-title': 'Sign in',
+            'auth-email-label': 'Email',
+            'auth-submit': 'Sign in',
+            'auth-success': 'Link sent, check your email',
+            'auth-error': 'An error occurred. Please try again.'
         }
     };
 
@@ -1668,47 +1890,56 @@
         }
     });
 
-    function switchLang(lang) {
-        currentLang = lang;
-        
-        // Save language to localStorage
-        localStorage.setItem('ecia-lang', lang);
-        
-        // Update lang link states
-        document.querySelectorAll('.lang-link').forEach(link => {
-            link.classList.remove('active');
-            if (link.textContent.trim() === lang.toUpperCase()) {
-                link.classList.add('active');
-            }
-        });
-        
-        // Update HTML lang attribute
-        document.documentElement.lang = lang;
-        
-        // Update all translatable elements
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            if (translations[lang][key]) {
-                element.textContent = translations[lang][key];
+    // Make switchLang globally accessible - MUST be defined before Supabase
+    window.switchLang = function(lang) {
+        try {
+            if (!lang || (lang !== 'fr' && lang !== 'en')) {
+                lang = 'fr';
             }
             
-            // Update href for links with data-i18n-href attributes
-            if (element.tagName === 'A') {
-                const hrefAttr = 'data-i18n-href-' + lang;
-                if (element.hasAttribute(hrefAttr)) {
-                    element.href = element.getAttribute(hrefAttr);
+            currentLang = lang;
+            
+            // Save language to localStorage
+            localStorage.setItem('ecia-lang', lang);
+            
+            // Update lang link states
+            document.querySelectorAll('.lang-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.textContent.trim() === lang.toUpperCase()) {
+                    link.classList.add('active');
                 }
-            }
-        });
-        
-        // Also update links with data-i18n-href attributes that don't have data-i18n
-        document.querySelectorAll('a[data-i18n-href-fr], a[data-i18n-href-en]').forEach(link => {
-            const hrefAttr = 'data-i18n-href-' + lang;
-            if (link.hasAttribute(hrefAttr)) {
-                link.href = link.getAttribute(hrefAttr);
-            }
-        });
-    }
+            });
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations && translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+                
+                // Update href for links with data-i18n-href attributes
+                if (element.tagName === 'A') {
+                    const hrefAttr = 'data-i18n-href-' + lang;
+                    if (element.hasAttribute(hrefAttr)) {
+                        element.href = element.getAttribute(hrefAttr);
+                    }
+                }
+            });
+            
+            // Also update links with data-i18n-href attributes that don't have data-i18n
+            document.querySelectorAll('a[data-i18n-href-fr], a[data-i18n-href-en]').forEach(link => {
+                const hrefAttr = 'data-i18n-href-' + lang;
+                if (link.hasAttribute(hrefAttr)) {
+                    link.href = link.getAttribute(hrefAttr);
+                }
+            });
+        } catch (error) {
+            console.error('Error in switchLang:', error);
+        }
+    };
 
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1721,6 +1952,51 @@
         });
     });
 
+    // Supabase Configuration - AFTER switchLang is defined
+    // ⚠️ REMPLACEZ CES VALEURS PAR VOS CRÉDENTIALS SUPABASE
+    const SUPABASE_URL = 'https://inamfqciwzgnkjteetkt.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImluYW1mcWNpd3pnbmtqdGVldGt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5OTUyODcsImV4cCI6MjA4MTU3MTI4N30.E0sfii7j89Dv2-oBytjfAN1MSXd_YJQmbF518bsDnmo';
+    
+    let supabase = null;
+    try {
+        if (window.supabase && SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+    } catch (error) {
+        console.warn('Supabase initialization error:', error);
+        supabase = null;
+    }
+
+    // Auth State
+    let currentUser = null;
+    let userPlan = null;
+
+    // Initialize language immediately - before DOMContentLoaded
+    (function() {
+        // Check URL parameter first
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLang = urlParams.get('lang');
+        
+        // Check localStorage
+        const storedLang = localStorage.getItem('ecia-lang');
+        
+        // Use URL param, then localStorage, then default to French
+        // Validate that lang is either 'fr' or 'en'
+        let initialLang = urlLang || storedLang || 'fr';
+        if (initialLang !== 'fr' && initialLang !== 'en') {
+            initialLang = 'fr';
+        }
+        
+        // Set currentLang immediately
+        currentLang = initialLang;
+        document.documentElement.lang = initialLang;
+        
+        // If storedLang is 'en', keep it, otherwise default to 'fr'
+        if (!storedLang && !urlLang) {
+            localStorage.setItem('ecia-lang', 'fr');
+        }
+    })();
+    
     // Initialize with language from URL, localStorage, or default to French
     window.addEventListener('DOMContentLoaded', () => {
         // Check URL parameter first
@@ -1731,8 +2007,30 @@
         const storedLang = localStorage.getItem('ecia-lang');
         
         // Use URL param, then localStorage, then default to French
-        const initialLang = urlLang || storedLang || 'fr';
-        switchLang(initialLang);
+        // Validate that lang is either 'fr' or 'en'
+        let initialLang = urlLang || storedLang || 'fr';
+        if (initialLang !== 'fr' && initialLang !== 'en') {
+            initialLang = 'fr';
+        }
+        
+        // Call switchLang to set the language immediately
+        if (typeof window.switchLang === 'function') {
+            window.switchLang(initialLang);
+        } else {
+            // Fallback: set language directly
+            currentLang = initialLang;
+            localStorage.setItem('ecia-lang', initialLang);
+            document.documentElement.lang = initialLang;
+            // Try to update translations manually
+            if (translations && translations[initialLang]) {
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[initialLang][key]) {
+                        element.textContent = translations[initialLang][key];
+                    }
+                });
+            }
+        }
         
         // Clean URL if lang parameter was present
         if (urlLang) {
@@ -1781,12 +2079,221 @@
             // Check on page load
             checkCookieConsent();
         }
+
+        // Initialize auth after a short delay to ensure Supabase is loaded
+        setTimeout(() => {
+            try {
+                if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && supabase) {
+                    initAuth();
+                }
+            } catch (error) {
+                console.warn('⚠️ Supabase initialization skipped:', error);
+            }
+        }, 100);
     });
 
     // Close mobile menu on resize to desktop
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768) {
             closeMobileMenu();
+        }
+    });
+
+    // ========== SUPABASE AUTHENTICATION ==========
+
+    // Open Auth Modal
+    function openAuthModal() {
+        const modal = document.getElementById('authModal');
+        const form = document.getElementById('authForm');
+        const message = document.getElementById('authMessage');
+        
+        modal.classList.add('show');
+        form.reset();
+        message.classList.remove('show', 'success', 'error');
+    }
+
+    // Close Auth Modal
+    function closeAuthModal() {
+        const modal = document.getElementById('authModal');
+        modal.classList.remove('show');
+    }
+
+    // Handle Auth Form Submit
+    async function handleAuthSubmit(event) {
+        event.preventDefault();
+        
+        if (!supabase) {
+            showAuthMessage('Supabase n\'est pas configuré. Veuillez configurer les credentials.', 'error');
+            return;
+        }
+        
+        const emailInput = document.getElementById('authEmail');
+        const submitBtn = document.getElementById('authSubmitBtn');
+        const message = document.getElementById('authMessage');
+        const email = emailInput.value.trim();
+
+        if (!email) {
+            showAuthMessage('Veuillez entrer une adresse email valide.', 'error');
+            return;
+        }
+
+        // Disable button
+        submitBtn.disabled = true;
+        const sendingText = currentLang === 'fr' ? 'Envoi...' : 'Sending...';
+        submitBtn.textContent = sendingText;
+
+        try {
+            const { data, error } = await supabase.auth.signInWithOtp({
+                email: email,
+                options: {
+                    emailRedirectTo: window.location.origin + window.location.pathname
+                }
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            // Success - use translations
+            const successKey = 'auth-success';
+            const successText = translations[currentLang]?.[successKey] || (currentLang === 'fr' ? 'Lien envoyé, vérifiez votre email' : 'Link sent, check your email');
+            showAuthMessage(successText, 'success');
+            
+            // Clear form
+            emailInput.value = '';
+            
+            // Close modal after 3 seconds
+            setTimeout(() => {
+                closeAuthModal();
+            }, 3000);
+
+        } catch (error) {
+            console.error('Auth error:', error);
+            const errorKey = 'auth-error';
+            const errorText = translations[currentLang]?.[errorKey] || (currentLang === 'fr' ? 'Une erreur est survenue. Veuillez réessayer.' : 'An error occurred. Please try again.');
+            showAuthMessage(errorText, 'error');
+        } finally {
+            submitBtn.disabled = false;
+            const submitKey = 'auth-submit';
+            submitBtn.textContent = translations[currentLang]?.[submitKey] || (currentLang === 'fr' ? 'Se connecter' : 'Sign in');
+        }
+    }
+
+    // Show Auth Message
+    function showAuthMessage(text, type) {
+        const message = document.getElementById('authMessage');
+        message.textContent = text;
+        message.className = `auth-message show ${type}`;
+    }
+
+    // Handle Logout
+    async function handleLogout() {
+        if (!supabase) return;
+        
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+            
+            currentUser = null;
+            userPlan = null;
+            updateAuthUI();
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    }
+
+    // Get User Profile
+    async function getUserProfile(userId) {
+        if (!supabase) return 'free';
+        
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('plan')
+                .eq('id', userId)
+                .single();
+
+            if (error) {
+                console.error('Error fetching profile:', error);
+                return null;
+            }
+
+            return data?.plan || 'free';
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+            return 'free';
+        }
+    }
+
+    // Update Auth UI
+    function updateAuthUI() {
+        const authUserInfo = document.getElementById('authUserInfo');
+        const authLoginBtn = document.getElementById('authLoginBtn');
+        const authUserEmail = document.getElementById('authUserEmail');
+        const authUserPlan = document.getElementById('authUserPlan');
+        const headerCtaBtn = document.getElementById('headerCtaBtn');
+
+        if (currentUser) {
+            // User is logged in
+            authUserInfo.classList.add('show');
+            authLoginBtn.style.display = 'none';
+            headerCtaBtn.style.display = 'none';
+            
+            authUserEmail.textContent = currentUser.email;
+            
+            // Update plan display
+            const planText = userPlan || 'free';
+            const planDisplay = planText.charAt(0).toUpperCase() + planText.slice(1);
+            authUserPlan.textContent = planDisplay;
+        } else {
+            // User is not logged in
+            authUserInfo.classList.remove('show');
+            authLoginBtn.style.display = 'inline-block';
+            headerCtaBtn.style.display = 'inline-block';
+        }
+    }
+
+    // Initialize Auth
+    async function initAuth() {
+        if (!supabase) return;
+        
+        try {
+            // Check current session
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+            
+            if (sessionError) {
+                console.error('Session error:', sessionError);
+                return;
+            }
+
+            if (session?.user) {
+                currentUser = session.user;
+                userPlan = await getUserProfile(session.user.id);
+                updateAuthUI();
+            }
+
+            // Listen for auth changes
+            supabase.auth.onAuthStateChange(async (event, session) => {
+                if (event === 'SIGNED_IN' && session?.user) {
+                    currentUser = session.user;
+                    userPlan = await getUserProfile(session.user.id);
+                    updateAuthUI();
+                } else if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                    userPlan = null;
+                    updateAuthUI();
+                }
+            });
+
+        } catch (error) {
+            console.error('Auth initialization error:', error);
+        }
+    }
+
+    // Close modal on outside click
+    document.getElementById('authModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'authModal') {
+            closeAuthModal();
         }
     });
 
@@ -1802,6 +2309,29 @@
             <button class="cookie-btn cookie-btn-refuse" id="cookieRefuse" data-i18n="cookie-refuse">Refuser</button>
             <button class="cookie-btn cookie-btn-accept" id="cookieAccept" data-i18n="cookie-accept">Accepter</button>
         </div>
+    </div>
+</div>
+
+<!-- Auth Modal -->
+<div class="auth-modal" id="authModal">
+    <div class="auth-modal-content">
+        <button class="auth-modal-close" onclick="closeAuthModal()">×</button>
+        <h2 data-i18n="auth-title">Se connecter</h2>
+        <div class="auth-message" id="authMessage"></div>
+        <form id="authForm" onsubmit="handleAuthSubmit(event)">
+            <div class="auth-form-group">
+                <label for="authEmail" data-i18n="auth-email-label">Email</label>
+                <input 
+                    type="email" 
+                    id="authEmail" 
+                    name="email" 
+                    placeholder="votre@email.com" 
+                    required
+                    autocomplete="email"
+                >
+            </div>
+            <button type="submit" class="auth-btn" id="authSubmitBtn" data-i18n="auth-submit">Se connecter</button>
+        </form>
     </div>
 </div>
 
